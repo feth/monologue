@@ -1,7 +1,9 @@
 """
 Utility module to log and indicate the progress of any job that use loops.
 
+=================
 New BSD License
+=================
 
 Copyright (c) 2011-2012 Feth Arezki.
 All rights reserved.
@@ -32,6 +34,23 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 DAMAGE.
+
+=================================
+TL; DR (too long, did'nt read)
+=================================
+
+>>> logger = get_logger("identifier")
+>>> logger.msg("blah")
+[identifier] blah
+>>> logger.set_dot_char("x")  # doctest prefers x to .
+>>> for time in xrange(5): logger.dot()
+xxxxx
+
+===================================
+Doc
+===================================
+For now, a doctest in monologue/tests/
+
 """
 
 
@@ -47,7 +66,8 @@ PROGRESS = INFO - 5  # == DEBUG + 5
 REFERENCE_LEVEL = PROGRESS
 DEFAULT_DOT_CHAR = "."
 
-LAST_OUT = None
+# global variable (baah) for output type
+LAST_OUT = TEXT
 
 # used by getLogger
 _LOGGERS = {}
@@ -56,12 +76,37 @@ _LOGGERS = {}
 _NEVER_PERCENT_VALUE = 0
 
 
+def _set_out_type(new):
+    """
+    As we  don't want to mix progress dots and text on the same line,
+    we insert a linebreak whenever the output type changes.
+
+    Parameters
+    ----------
+    new: DOT or TEXT
+    """
+    global LAST_OUT
+
+    if LAST_OUT is None:
+        # initialize and return
+        LAST_OUT = new
+        return
+    elif new == LAST_OUT:
+        #no change
+        return
+    elif new == TEXT:
+        sys.stdout.write('\n')
+    LAST_OUT = new
+
+
 def _textlogger_factory(klass, attr_name):
     """
     Adds a call to _set_out_type to the vanilla function
-    taken in klass
+    taken in klass.
 
-    This is required because of switching between 2 kind of outputs
+    This factory is used at class initialization time to wrap
+    Logger.debug() and family in ProgressAndLog,
+    in order to insert newlines between dots and log messages.
     """
     func = getattr(klass, attr_name)
 
@@ -72,15 +117,14 @@ def _textlogger_factory(klass, attr_name):
     return new_func
 
 
-class ScikitLearnLogger(Logger):
+class ProgressAndLog(Logger):
     """
     Subclass of Logger, this class combines 2 functionnalities:
     -print messages
     -report computing progress
 
-    TL; DR (too long, did'nt read):
-        logger.msg("blah"),
-        logger.dot()
+    Logger API: http://docs.python.org/library/logging.html#logger-objects
+
     """
     def __init__(self, name, verbosity_offset):
         Logger.__init__(self, name)
@@ -113,6 +157,13 @@ class ScikitLearnLogger(Logger):
         """
         Prints out an msg.
         Conditionnal to verbosity settings
+
+        Parameters
+        ----------
+        message: text string
+
+        verbosity: optional; boolean or integer.
+            if False, the message is only displayed when the logger
         """
         if verbosity in (True, None):
             verbosity = CRITICAL
@@ -126,7 +177,9 @@ class ScikitLearnLogger(Logger):
         Spits out a dot.
         Conditionnal to verbosity settings
 
-        verbosity can be: unspecified,  a boolean or a int
+        Parameters
+        ----------
+        verbosity: see ProgressAndLog.msg
         """
         output = False
         if verbosity in (True, None):
@@ -156,7 +209,7 @@ class ScikitLearnLogger(Logger):
 
     def progress_every(self, value):
         """
-        Configures ScikitLearnLogger to spit out a progress indication
+        Configures ProgressAndLog to spit out a progress indication
         once every for every <value> times progress_step() is called
         """
         self._progress_every = value
@@ -164,7 +217,7 @@ class ScikitLearnLogger(Logger):
     def dot_every(self, value):
         """
         value: int
-        Configures ScikitLearnLogger to spit out a dot once every for every
+        Configures ProgressAndLog to spit out a dot once every for every
         <value> times progress_step() is called or never if <value> is < 1
         """
         self._dot_every = value
@@ -204,7 +257,14 @@ class ScikitLearnLogger(Logger):
         self._next_percent_print += self._percent_print_every
 
     def progress_step(self):
+        """
+        Call this every time you perform a loop.
+        If a message or a dot needs to be spit every 1000 iterations,
+        this function will take care.
+        """
         self._iterations += 1
+
+        # keep dot first, it's prettier.
         self._maybe_dot()
         self._maybe_iteration_msg()
         self._maybe_percentage_msg()
@@ -212,7 +272,15 @@ class ScikitLearnLogger(Logger):
     def percent_target(self, value):
         self._percent_target = value
 
-    def progress_complete(self):
+    def progress_complete(self, verbosity=None):
+        """
+        Call this upon completion to print out a message with the number
+        of performed iterations.
+        Iterations counting will be reset
+
+        verbosity has the same meaning as in ProgressAndLog.dot
+        and ProgressAndLog.msg
+        """
         self.msg("Successfully completed %d iterations" % self._iterations)
         self._iterations = 0
         self._next_percent_print = _NEVER_PERCENT_VALUE
@@ -225,29 +293,22 @@ class ScikitLearnLogger(Logger):
         self._percent_print_every = value
 
 
-def _set_out_type(new):
-    """
-    As we  don't want to mix progress dots and text on the same line,
-    so we insert a linebreak whenever the output type changes.
-    """
-    global LAST_OUT
-
-    if LAST_OUT is None:
-        # initialize and return
-        LAST_OUT = new
-        return
-    elif new == LAST_OUT:
-        #no change
-        return
-    elif new == TEXT:
-        sys.stdout.write('\n')
-    LAST_OUT = new
-
-
 def get_logger(name, verbosity_offset=0):
+    """
+    Provides a logger with specified name.
+    """
     logger = _LOGGERS.get(name)
     if logger is None:
-        logger = ScikitLearnLogger(name, verbosity_offset=verbosity_offset)
+        logger = ProgressAndLog(name, verbosity_offset=verbosity_offset)
         _LOGGERS[name] = logger
         # verbosity_offset is ignored after the 1st call
     return logger
+
+
+def reset_newline():
+    """
+    Ensure you don't get a spurious \n when logging
+    in weird conditions after re-importing this module
+    """
+    global LAST_OUT
+    LAST_OUT = TEXT
