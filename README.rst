@@ -62,12 +62,14 @@ meaning of the "log level" from logging.
 Progress information
 ~~~~~~~~~~~~~~~~~~~~~~~
 
+All indicators below shown can be combined at will.
+
 Running distance unknown
 -------------------------------
 
 If your program is looping in the dark, searching for a solution with the loop
 number unknown, then maybe the best output you can do to say "hey, I'm alive,
-I'm digging that mine out" is a plain old dot::
+I'm digging that mine out" is a plain old dot every given number of steps::
 
         .
 
@@ -79,16 +81,23 @@ Then, one minute later, another dot::
 
 Many dots, and so on, you get it.
 
+This can be combined with::
+
+        ..........
+        [Exciting computation] Iteration 1000 done
+        ..........
+        [Exciting computation] Iteration 2000 done
+        ...
+
 
 Running distance known
 -------------------------------
 
 It's fair, if you know your program is going to run through 42195 iterations a
-particular loop, to let the viewer know how far it's gone (at configurable
-milestones)::
+particular loop, to let the viewer know how far it's gone::
 
-        [Exciting computation] Progress: 2.36 %
-        [Exciting computation] Progress: 4.72 %
+        [Exciting computation] 10 %
+        [Exciting computation] 20 %
         ...
 
 This uses the plain logging system.
@@ -117,6 +126,8 @@ Roadmap
 - Handle other streams than sys.stdout
     If progress dots are to be printed on random streams,
     the handling of newlines may be a little tricky.
+    A workaround is that the dev uses separate loggers (different names)
+    if they intend to log to files and show progress.
 - Lazy string formatting
     take advantage of this feature from logging (with a keyword)
 - Color_?
