@@ -9,6 +9,13 @@ We are testing the global Logger level, but this does not harm the
 possibility of adding a log handler to a logger, with a specific log level.
 However, most progress_* functions do bypass the traditional logging mechanism.
 
+Test internals
+==============
+>>> from .. import core
+>>> core.reset_newline()
+>>> core.LAST_OUT == core.TEXT  # must be True on first import or after reset_newline
+True
+
 Creation of loggers
 ===================
 >>> from .. import get_logger, PROGRESS
