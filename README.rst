@@ -5,7 +5,10 @@ MONOLOGUE
 This Python module offers an interface to unify:
 
 - logging
-- marking of processing progression with dots.
+    basically, standard Python logging with some boilerplate removed.
+- progress information
+    dots, loops count, completion percentages
+    about an ongoing computation.
 
 
 .. contents::
@@ -16,14 +19,16 @@ This Python module offers an interface to unify:
 Licence
 ========
 
-See COPYING: New BSD licence (open to discussion).
+See COPYING: New BSD license (open to discussion).
 
 Requirements and compatibility
 ==============================
 
 .. TODO
 
-Target to day is stock Python 2.7 with no requirement.
+Target to day is stock Python 2.5-7 with no requirement.
+
+Python 2.7 works.
 
 Here be moreinfo.
 
@@ -34,19 +39,25 @@ This is meant to be 'easy' to use, even for non computer scientists and
 required to work well even on very minimal exotic platforms such as Windows
 console terminals.
 
-Even the light from the most beautiful nebulae far up in the sky needs some
-time to reach us, so do the results of some scikit-learn based calculations;
-it's a good practice to impress the user with details about what's going on
-(informative messages -we use traditional Python logging for that) and/or
-progress information.
+The light from the most beautiful nebulae far up in the sky travels a long
+time to reach us; likewise, it may be that a lot of computational time
+separates you from the contemplation of an interesting result after you fed
+a program heaps of data (for instance, modelisation with scikit-learn_).
+
+It is good practice to impress the viewer with details about what's going on:
+informative messages and/or progress information.
+The purpose of this Python module is to help you do so.
+
+.. _scikit-learn: http://scikit-learn.org
 
 Differences with stock logging
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Some things are deliberately different from logging.  This will be logging to
-stdout by default. You can log somewhere else, but that's optional.
+Some things are deliberately different from logging.  This module will
+be logging to stdout by default.
 
-In monologue, there is a verbosity setting; that integer has the opposite meaning of the "log level" from logging.
+Loggers defined here here have a verbosity setting: this integer has the opposite
+meaning of the "log level" from logging.
 
 Progress information
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -80,19 +91,46 @@ milestones)::
         [Exciting computation] Progress: 4.72 %
         ...
 
+This uses the plain logging system.
+
+Logging and progress combined
+---------------------------------
+
+The combination of logging full lines and progress dots that are not
+individually followed with a newline character involves a trick to end the line
+before an informative message.
+
 
 How to use
 ===========
 
-Here be docs
+Here be docs; for now there is a huge doctest that maybe ought to be split.
 
 .. TODO
 
-From brain to bytes
+
+Roadmap
+=======
+
+- Handle CR/LF as well as ``\n``
+    Read sys.platform, act accordingly.
+- Handle other streams than sys.stdout
+    If progress dots are to be printed on random streams,
+    the handling of newlines may be a little tricky.
+- Color_?
+    I doubt this works on Windows.
+- Use configuration files?
+    For some of the above features.
+
+.. _Color:
+   http://stackoverflow.com/questions/384076/how-can-i-make-the-python-logging-output-to-be-colored
+
+From ideas to bytes
 ======================
 
-The idea behind this, and many ideas of how it should be done are Gael Varoquaux's.
-Also participated in the discussion, or motivated me:
-Olivier Grisel, Fabian Pedregosa, Nelle Varoquaux. See
-https://github.com/scikit-learn/scikit-learn/pull/130
+Code monkey is Feth Arezki.
 
+The idea behind this, and many ideas of how it should be done are Gael
+Varoquaux's.  Also participated in the discussion, or motivated me: Olivier
+Grisel, Fabian Pedregosa, Nelle Varoquaux. See
+https://github.com/scikit-learn/scikit-learn/pull/130
