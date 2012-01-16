@@ -28,7 +28,7 @@ Requirements and compatibility
 
 Target to day is stock Python 2.5-7 with no requirement.
 
-Python 2.7 works.
+This works on Python 2.7/Linux.
 
 Here be moreinfo.
 
@@ -81,7 +81,7 @@ Then, one minute later, another dot::
 
 Many dots, and so on, you get it.
 
-This can be combined with::
+There is also a counter, that you can combine with dots::
 
         ..........
         [Exciting computation] Iteration 1000 done
@@ -89,16 +89,22 @@ This can be combined with::
         [Exciting computation] Iteration 2000 done
         ...
 
+Every logger can use a different dot character if you wish::
+
+        .....x..x....xxx..
+
 
 Running distance known
 -------------------------------
 
 It's fair, if you know your program is going to run through 42195 iterations a
-particular loop, to let the viewer know how far it's gone::
+particular loop, to let the viewer know how far it's gone, proportionnaly::
 
         [Exciting computation] 10 %
         [Exciting computation] 20 %
         ...
+
+You can also mix this with dots.
 
 This uses the plain logging system.
 
@@ -113,7 +119,7 @@ before an informative message.
 How to use
 ===========
 
-Here be docs; for now there is a huge doctest that maybe ought to be split.
+Here be docs; for now there only is a huge doctest.
 
 .. TODO
 
@@ -130,10 +136,17 @@ Roadmap
     if they intend to log to files and show progress.
 - Lazy string formatting
     take advantage of this feature from logging (with a keyword)
+- easy access to a log format that includes timestamp
+        with an on/off switch and strptime format
 - Color_?
     I doubt this works on Windows.
 - Use configuration files?
     For some of the above features.
+- ``dot_string`` keyword in Logger.dot()?
+    So the char, by default a dot, could be temporarily changed to indicate some info about how
+    the ongoing computation::
+
+        ...o...x..E......x
 
 .. _Color:
    http://stackoverflow.com/questions/384076/how-can-i-make-the-python-logging-output-to-be-colored
