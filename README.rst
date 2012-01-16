@@ -117,6 +117,8 @@ Roadmap
 - Handle other streams than sys.stdout
     If progress dots are to be printed on random streams,
     the handling of newlines may be a little tricky.
+- Lazy string formatting
+    take advantage of this feature from logging (with a keyword)
 - Color_?
     I doubt this works on Windows.
 - Use configuration files?
