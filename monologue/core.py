@@ -125,6 +125,32 @@ class ProgressAndLog(Logger):
 
     Logger API: http://docs.python.org/library/logging.html#logger-objects
 
+    traditional logging functions still work
+    ========================================
+    #boilerplate initialization
+    >>> from logging import DEBUG, INFO, WARNING
+    >>> reset_newline()
+
+    >>> verbose_logger = get_logger("ver", verbosity_offset=-10)
+    >>> standard_logger = get_logger("std")
+    >>> laconic_logger = get_logger("lac", verbosity_offset=+10)
+    >>> verbose_logger.debug("Message must be displayed")
+    [ver] Message must be displayed
+    >>> standard_logger.debug("Message mustn't be displayed")
+    >>> laconic_logger.debug("Message mustn't be displayed")
+
+    >>> verbose_logger.info("Message must be displayed")
+    [ver] Message must be displayed
+    >>> standard_logger.info("Message must be displayed")
+    [std] Message must be displayed
+    >>> laconic_logger.info("Message mustn't be displayed")
+
+    >>> verbose_logger.warning("Message must be displayed")
+    [ver] Message must be displayed
+    >>> standard_logger.warning("Message must be displayed")
+    [std] Message must be displayed
+    >>> laconic_logger.warning("Message must be displayed")
+    [lac] Message must be displayed
     """
     def __init__(self, name, verbosity_offset):
         Logger.__init__(self, name)

@@ -33,26 +33,6 @@ Creation of loggers
 >>> laconic_logger = get_logger("lac",
 ... verbosity_offset=+10)
 
-traditional logging functions still work
-========================================
->>> verbose_logger.debug("Message must be displayed")
-[ver] Message must be displayed
->>> standard_logger.debug("Message mustn't be displayed")
->>> laconic_logger.debug("Message mustn't be displayed")
-
->>> verbose_logger.info("Message must be displayed")
-[ver] Message must be displayed
->>> standard_logger.info("Message must be displayed")
-[std] Message must be displayed
->>> laconic_logger.info("Message mustn't be displayed")
-
->>> verbose_logger.warning("Message must be displayed")
-[ver] Message must be displayed
->>> standard_logger.warning("Message must be displayed")
-[std] Message must be displayed
->>> laconic_logger.warning("Message must be displayed")
-[lac] Message must be displayed
-
 Play with verbosity (absolute)
 ------------------------------
 >>> laconic_logger.setLevel(DEBUG)
