@@ -57,48 +57,6 @@ progress_step
 >>> progress_logger.setLevel(PROGRESS)
 >>> progress_logger.set_dot_char('x')
 
-Testing dots alone
-~~~~~~~~~~~~~~~~~~
->>> for count in range(10):
-...     progress_logger.progress_step()
-xxxxxxxxxx
-
->>> progress_logger.progress_reset()
->>> progress_logger.dot_every(10)
-
->>> for count in range(9):
-...     progress_logger.progress_step()
->>> progress_logger.progress_step()
-x
-
->>> for count in range(90):
-...     progress_logger.progress_step()
-xxxxxxxxx
-
->>> progress_logger.info('eat newline after xxxxxxxx')
-<BLANKLINE>
-[progress] eat newline after xxxxxxxx
-
-Testing progress alone
-~~~~~~~~~~~~~~~~~~~~~~~
->>> progress_logger.dot_every(0)
->>> for count in range(90):
-...     progress_logger.progress_step()
-
->>> progress_logger.progress_reset()
->>> progress_logger.progress_every(1)
->>> for count in range(3):
-...     progress_logger.progress_step()
-[progress] Iteration 1 done
-[progress] Iteration 2 done
-[progress] Iteration 3 done
-
->>> progress_logger.progress_reset()
->>> progress_logger.progress_every(1000)
->>> for count in range(2000):
-...     progress_logger.progress_step()
-[progress] Iteration 1000 done
-[progress] Iteration 2000 done
 
 Testing progress AND dots
 ~~~~~~~~~~~~~~~~~~~~~~~~~

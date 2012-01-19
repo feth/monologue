@@ -348,16 +348,65 @@ class ProgressAndLog(Logger):
 
     def progress_every(self, value):
         """
-        Configures ProgressAndLog to spit out a progress indication
-        once every for every <value> times progress_step() is called
+        parameters
+        ----------
+        value: int
+            Configures ProgressAndLog.progress_step() to spit out
+            an informative line
+            - if <value> is < 1: never
+            - else: once every for every <value> times
+
+        #boilerplate initialization
+        >>> logger = get_logger("test.progress_every")
+        >>> logger.setLevel(PROGRESS)
+        >>> logger.progress_reset()
+
+
+        #testing progress alone: prevent dots
+        >>> logger.dot_every(0)
+
+
+        >>> logger.progress_every(1)
+        >>> for count in range(3):
+        ...     logger.progress_step()
+        [test.progress_every] Iteration 1 done
+        [test.progress_every] Iteration 2 done
+        [test.progress_every] Iteration 3 done
+
+        >>> logger.progress_reset()
+        >>> logger.progress_every(1000)
+        >>> for count in range(2000):
+        ...     logger.progress_step()
+        [test.progress_every] Iteration 1000 done
+        [test.progress_every] Iteration 2000 done
         """
         self._progress_every = value
 
     def dot_every(self, value):
         """
+        parameters
+        ----------
         value: int
-        Configures ProgressAndLog to spit out a dot once every for every
-        <value> times progress_step() is called or never if <value> is < 1
+            Configures ProgressAndLog.progress_step() to spit out a dot
+            - if <value> is < 1: never
+            - else: once every for every <value> times
+
+        #boilerplate initialization
+        >>> logger = get_logger("test.dot_every")
+        >>> logger.setLevel(PROGRESS)
+        >>> logger.set_dot_char('x')
+
+        #ensure indicators are blank
+        >>> logger.progress_reset()
+
+        >>> logger.dot_every(10)
+        >>> for count in range(9):
+        ...     logger.progress_step()
+        >>> logger.progress_step()
+        x
+        >>> for count in range(90):
+        ...     logger.progress_step()
+        xxxxxxxxx
         """
         self._dot_every = value
 
@@ -400,6 +449,29 @@ class ProgressAndLog(Logger):
         Call this every time you perform a loop.
         If a message or a dot needs to be spit every 1000 iterations,
         this function will take care.
+
+        #boilerplate initialization
+        >>> logger = get_logger("test.progress_step")
+        >>> logger.setLevel(PROGRESS)
+        >>> logger.set_dot_char('x')
+
+        Testing dots alone
+        ~~~~~~~~~~~~~~~~~~
+        >>> for count in range(10):
+        ...     logger.progress_step()
+        xxxxxxxxxx
+
+        #Keep next to previous test (dots alone)
+        >>> logger.info('eat newline after xxxxxxxx')
+        <BLANKLINE>
+        [test.progress_step] eat newline after xxxxxxxx
+
+        Testing progress alone
+        ~~~~~~~~~~~~~~~~~~~~~~~
+        >>> logger.dot_every(0)
+        >>> for count in range(90):
+        ...     logger.progress_step()
+
         """
         self._iterations += 1
 
