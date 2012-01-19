@@ -371,6 +371,14 @@ class ProgressAndLog(Logger):
             sys.stdout.write(self._dot_char)
 
     def set_offset(self, offset):
+        """
+        Sets verbosity offset above/below standard verbosity level.
+
+        >>> logger = get_logger("test.offset")
+        >>> logger.set_offset(+10)
+        >>> logger.offset()
+        10
+        """
         self._offset = offset
         self.setLevel(offset + REFERENCE_LEVEL)
 
