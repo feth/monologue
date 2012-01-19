@@ -42,7 +42,7 @@ TL; DR (too long, did'nt read)
 >>> logger = get_logger("identifier")
 >>> logger.msg("blah")
 [identifier] blah
->>> logger.set_dot_char("x")  # doctest prefers x to .
+>>> logger.set_dot_string("x")  # doctest prefers x to .
 >>> for time in xrange(5): logger.dot()
 xxxxx
 
@@ -159,7 +159,7 @@ class ProgressAndLog(Logger):
     ------------------------------------
     >>> logger = get_logger("test.mix_progress_dots")
     >>> logger.progress_every(1)
-    >>> logger.set_dot_char('x')
+    >>> logger.set_dot_string('x')
     >>> logger.progress_step()
     x
     [test.mix_progress_dots] Iteration 1 done
@@ -209,7 +209,7 @@ class ProgressAndLog(Logger):
 
         self.set_offset(verbosity_offset)
 
-        self._dot_char = DEFAULT_DOT_CHAR
+        self._dot_string = DEFAULT_DOT_CHAR
 
     debug, info, warning, critical = (_textlogger_factory(Logger, name)
         for name in 'debug info warning critical'.split())
@@ -337,14 +337,22 @@ class ProgressAndLog(Logger):
         else:
             Logger.log(self, verbosity, message, msgvars)
 
-    def dot(self, verbosity=None):
+    def dot(self, verbosity=None, dot_string=None):
         """
         Spits out a dot.
         Conditionnal to verbosity settings
 
         Parameters
         ----------
-        verbosity: see ProgressAndLog.msg
+        verbosity: optional, see ProgressAndLog.msg
+        dot_string: optional, string
+            this string, likely "." or "x"... will be used this time only
+            This allows to tell information about the computation going on.
+            Examples::
+
+                [5][3][2][3][2][8][2][3]
+                or
+                ....X........X...............
 
         #boilerplate initialization
         >>> from logging import DEBUG, INFO, WARNING
@@ -353,6 +361,11 @@ class ProgressAndLog(Logger):
         >>> verbose_logger = get_logger("ver", verbosity_offset=-10)
         >>> standard_logger = get_logger("std")
         >>> laconic_logger = get_logger("lac", verbosity_offset=+10)
+
+        dot overriding
+        >>> for time in xrange(2):
+        ...     verbose_logger.dot(dot_string="[more than a dot]")
+        [more than a dot][more than a dot]
 
         no verbosity: always output
         >>> verbose_logger.dot() # doctest: +NORMALIZE_WHITESPACE
@@ -382,6 +395,7 @@ class ProgressAndLog(Logger):
         >>> standard_logger.dot(verbosity=PROGRESS)
         .
         >>> laconic_logger.dot(verbosity=PROGRESS)
+
         """
         output = False
         if verbosity in (True, None):
@@ -396,7 +410,9 @@ class ProgressAndLog(Logger):
             output = self._offset <= REFERENCE_LEVEL - verbosity
         if output:
             _set_out_type(DOT)
-            sys.stdout.write(self._dot_char)
+            if dot_string is None:
+                dot_string = self._dot_string
+            sys.stdout.write(dot_string)
 
     def set_offset(self, offset):
         """
@@ -474,7 +490,7 @@ class ProgressAndLog(Logger):
         #boilerplate initialization
         >>> logger = get_logger("test.dot_every")
         >>> logger.setLevel(PROGRESS)
-        >>> logger.set_dot_char('x')
+        >>> logger.set_dot_string('x')
 
         #ensure indicators are blank
         >>> logger.progress_reset()
@@ -490,8 +506,16 @@ class ProgressAndLog(Logger):
         """
         self._dot_every = value
 
-    def set_dot_char(self, char):
-        self._dot_char = char
+    def set_dot_string(self, dot_string):
+        """
+        Set the string to be used to mark progression
+
+        Parameters
+        ----------
+        dot_string: optional, string
+            this string, likely "." or "x"... will be used this time only
+        """
+        self._dot_string = dot_string
 
     def progress_reset(self):
         self._iterations = 0
@@ -533,7 +557,7 @@ class ProgressAndLog(Logger):
         #boilerplate initialization
         >>> logger = get_logger("test.progress_step")
         >>> logger.setLevel(PROGRESS)
-        >>> logger.set_dot_char('x')
+        >>> logger.set_dot_string('x')
 
         Testing dots alone
         ~~~~~~~~~~~~~~~~~~
