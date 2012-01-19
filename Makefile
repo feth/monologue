@@ -7,7 +7,7 @@ help:
 	@echo "usage: make help|clean|test"
 
 clean:
-	rm -rf $(COVER_HTML_DIR)
+	rm -rf $(COVER_HTML_DIR) .coverage
 	find $(PKG_NAME) -name "*.pyc" -delete
 
 test:
