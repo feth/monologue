@@ -225,9 +225,12 @@ class ProgressAndLog(Logger):
         verbosity: optional; boolean or integer.
             if False, the message is only displayed when the logger
             is as verbose as DEBUG or more
-        msgvars: string, tuple or mapping (dict)
+        msgvars: tuple or anything: mapping (dict), string, lists...
             as suitable for text suitable for substitution.
             message will be logged as ``message % msgvars``
+            tuple is handled specifically, all the rest is used in
+            a single placeholder
+
 
         msgvars allows for late evaluation of string formatting, therefore
         the formatting is not performed if the message should not be displayed
@@ -328,11 +331,11 @@ class ProgressAndLog(Logger):
         elif verbosity is False:
             verbosity = DEBUG
         _set_out_type(TEXT)
-        if isinstance(msgvars, (basestring, dict)):
-            Logger.log(self, verbosity, message, msgvars)
-        else:
-            # Logger.log wants sequences to be given as *args
+        if isinstance(msgvars, tuple):
+            # Logger.log wants tuples to be given as *args
             Logger.log(self, verbosity, message, *msgvars)
+        else:
+            Logger.log(self, verbosity, message, msgvars)
 
     def dot(self, verbosity=None):
         """
