@@ -140,11 +140,6 @@ Roadmap
     I doubt this works on Windows.
 - Use configuration files?
     For some of the above features.
-- ``dot_string`` keyword in Logger.dot()?
-    So the char, by default a dot, could be temporarily changed to indicate some info about how
-    the ongoing computation::
-
-        ...o...x..E......x
 
 .. _Color:
    http://stackoverflow.com/questions/384076/how-can-i-make-the-python-logging-output-to-be-colored
