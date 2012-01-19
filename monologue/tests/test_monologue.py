@@ -51,38 +51,6 @@ Initialization
 >>> for logger in (verbose_logger, standard_logger, laconic_logger):
 ...    logger.dot_every(10)
 
-dot: Same semantic as msg
-----------------------------------------
-
-no verbosity: always output
->>> verbose_logger.dot() # doctest: +NORMALIZE_WHITESPACE
-.
->>> standard_logger.dot() # doctest: +NORMALIZE_WHITESPACE
-.
->>> laconic_logger.dot() # doctest: +NORMALIZE_WHITESPACE
-.
-
-verbosity=False -> DEBUG
->>> verbose_logger.dot(verbosity=False)
-.
->>> standard_logger.dot(verbosity=False)
->>> laconic_logger.dot(verbosity=False)
-
-verbosity=True -> always print
->>> verbose_logger.dot(verbosity=True)
-.
->>> standard_logger.dot(verbosity=True)
-.
->>> laconic_logger.dot(verbosity=True)
-.
-
-verbosity=PROGRESS for instance
->>> verbose_logger.dot(verbosity=PROGRESS)
-.
->>> standard_logger.dot(verbosity=PROGRESS)
-.
->>> laconic_logger.dot(verbosity=PROGRESS)
-
 progress_step
 -------------
 >>> progress_logger = get_logger("progress")

@@ -282,6 +282,43 @@ class ProgressAndLog(Logger):
         Parameters
         ----------
         verbosity: see ProgressAndLog.msg
+
+        #boilerplate initialization
+        >>> from logging import DEBUG, INFO, WARNING
+        >>> reset_newline()
+
+        >>> verbose_logger = get_logger("ver", verbosity_offset=-10)
+        >>> standard_logger = get_logger("std")
+        >>> laconic_logger = get_logger("lac", verbosity_offset=+10)
+
+        no verbosity: always output
+        >>> verbose_logger.dot() # doctest: +NORMALIZE_WHITESPACE
+        .
+        >>> standard_logger.dot() # doctest: +NORMALIZE_WHITESPACE
+        .
+        >>> laconic_logger.dot() # doctest: +NORMALIZE_WHITESPACE
+        .
+
+        verbosity=False -> DEBUG
+        >>> verbose_logger.dot(verbosity=False)
+        .
+        >>> standard_logger.dot(verbosity=False)
+        >>> laconic_logger.dot(verbosity=False)
+
+        verbosity=True -> always print
+        >>> verbose_logger.dot(verbosity=True)
+        .
+        >>> standard_logger.dot(verbosity=True)
+        .
+        >>> laconic_logger.dot(verbosity=True)
+        .
+
+        verbosity=PROGRESS for instance
+        >>> verbose_logger.dot(verbosity=PROGRESS)
+        .
+        >>> standard_logger.dot(verbosity=PROGRESS)
+        .
+        >>> laconic_logger.dot(verbosity=PROGRESS)
         """
         output = False
         if verbosity in (True, None):
