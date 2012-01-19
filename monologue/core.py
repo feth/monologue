@@ -211,8 +211,8 @@ class ProgressAndLog(Logger):
 
         self._dot_string = DEFAULT_DOT_CHAR
 
-    debug, info, warning, critical = (_textlogger_factory(Logger, name)
-        for name in 'debug info warning critical'.split())
+    debug, info, warning, critical, log = (_textlogger_factory(Logger, name)
+        for name in 'debug info warning critical log'.split())
 
     def msg(self, message, verbosity=None, msgvars=()):
         """
@@ -263,7 +263,8 @@ class ProgressAndLog(Logger):
         False
         >>> verbose_logger.msg("Message must be displayed", verbosity=False)
         [test.msg.ver] Message must be displayed
-        >>> standard_logger.msg("Message must'nt be displayed", verbosity=False)
+        >>> standard_logger.msg("Message must'nt be displayed",
+        ... verbosity=False)
         >>> laconic_logger.msg("Message must'nt be displayed", verbosity=False)
 
         True
@@ -282,7 +283,8 @@ class ProgressAndLog(Logger):
         DEBUG (10)
         >>> verbose_logger.msg("Message must be displayed", verbosity=DEBUG)
         [test.msg.ver] Message must be displayed
-        >>> standard_logger.msg("Message must'nt be displayed", verbosity=DEBUG)
+        >>> standard_logger.msg("Message must'nt be displayed",
+        ... verbosity=DEBUG)
         >>> laconic_logger.msg("Message must'nt be displayed", verbosity=DEBUG)
 
         INFO (20)
@@ -319,8 +321,9 @@ class ProgressAndLog(Logger):
         ... msgvars="placed_data")
         [test.msg_placeholder] Message with 1 placeholder [[placed_data]]
         >>> logger.msg("Message with 2 placeholders [[%s]] [[%s]]",
-        ... msgvars=("data 1", "data 2"))
-        [test.msg_placeholder] Message with 2 placeholders [[data 1]] [[data 2]]
+        ... msgvars=("data 1", "data 2")) #doctest: +NORMALIZE_WHITESPACE
+        [test.msg_placeholder] Message with 2 placeholders [[data 1]]
+        [[data 2]]
         >>> logger.msg("Message with dict formatting [[%(value 1)s, "
         ... "%(value 2)s]]", msgvars={"value 1": "aaa", "value 2": "bbb"},)
         [test.msg_placeholder] Message with dict formatting [[aaa, bbb]]
