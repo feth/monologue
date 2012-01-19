@@ -374,15 +374,24 @@ class ProgressAndLog(Logger):
         """
         Sets verbosity offset above/below standard verbosity level.
 
+        Parameters:
+        offset: integer
+            makes sense between -5 and +35
+
         >>> logger = get_logger("test.offset")
         >>> logger.set_offset(+10)
         >>> logger.offset()
         10
+        >>> logger.getEffectiveLevel()
+        25
         """
         self._offset = offset
         self.setLevel(offset + REFERENCE_LEVEL)
 
     def add_to_offset(self, value):
+        """
+
+        """
         self.set_offset(self._offset + value)
 
     def setLevel(self, level):
