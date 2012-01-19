@@ -131,26 +131,61 @@ class ProgressAndLog(Logger):
     >>> from logging import DEBUG, INFO, WARNING
     >>> reset_newline()
 
-    >>> verbose_logger = get_logger("ver", verbosity_offset=-10)
-    >>> standard_logger = get_logger("std")
-    >>> laconic_logger = get_logger("lac", verbosity_offset=+10)
+    >>> verbose_logger = get_logger("test.logging.ver", verbosity_offset=-10)
+    >>> standard_logger = get_logger("test.logging.std")
+    >>> laconic_logger = get_logger("test.logging.lac", verbosity_offset=+10)
     >>> verbose_logger.debug("Message must be displayed")
-    [ver] Message must be displayed
+    [test.logging.ver] Message must be displayed
     >>> standard_logger.debug("Message mustn't be displayed")
     >>> laconic_logger.debug("Message mustn't be displayed")
 
     >>> verbose_logger.info("Message must be displayed")
-    [ver] Message must be displayed
+    [test.logging.ver] Message must be displayed
     >>> standard_logger.info("Message must be displayed")
-    [std] Message must be displayed
+    [test.logging.std] Message must be displayed
     >>> laconic_logger.info("Message mustn't be displayed")
 
     >>> verbose_logger.warning("Message must be displayed")
-    [ver] Message must be displayed
+    [test.logging.ver] Message must be displayed
     >>> standard_logger.warning("Message must be displayed")
-    [std] Message must be displayed
+    [test.logging.std] Message must be displayed
     >>> laconic_logger.warning("Message must be displayed")
-    [lac] Message must be displayed
+    [test.logging.lac] Message must be displayed
+
+    corner cases
+    ============
+
+    mixing of progress messages and dots
+    ------------------------------------
+    >>> logger = get_logger("test.mix_progress_dots")
+    >>> logger.progress_every(1)
+    >>> logger.set_dot_char('x')
+    >>> logger.progress_step()
+    x
+    [test.mix_progress_dots] Iteration 1 done
+
+    >>> logger.progress_reset()
+    >>> for count in range(4):
+    ...     logger.progress_step()
+    x
+    [test.mix_progress_dots] Iteration 1 done
+    x
+    [test.mix_progress_dots] Iteration 2 done
+    x
+    [test.mix_progress_dots] Iteration 3 done
+    x
+    [test.mix_progress_dots] Iteration 4 done
+
+    >>> logger.progress_reset()
+    >>> logger.set_offset(+0)
+    >>> logger.dot_every(100)
+    >>> logger.progress_every(1000)
+    >>> for count in range(2000):
+    ...     logger.progress_step()
+    xxxxxxxxxx
+    [test.mix_progress_dots] Iteration 1000 done
+    xxxxxxxxxx
+    [test.mix_progress_dots] Iteration 2000 done
     """
     def __init__(self, name, verbosity_offset):
         Logger.__init__(self, name)
@@ -198,15 +233,15 @@ class ProgressAndLog(Logger):
         >>> from logging import DEBUG, INFO, WARNING
         >>> reset_newline()
 
-        >>> verbose_logger = get_logger("ver", verbosity_offset=-10)
-        >>> standard_logger = get_logger("std")
-        >>> laconic_logger = get_logger("lac", verbosity_offset=+10)
+        >>> verbose_logger = get_logger("test.msg.ver", verbosity_offset=-10)
+        >>> standard_logger = get_logger("test.msg.std")
+        >>> laconic_logger = get_logger("test.msg.lac", verbosity_offset=+10)
         >>> verbose_logger.msg("Message must be displayed")
-        [ver] Message must be displayed
+        [test.msg.ver] Message must be displayed
         >>> standard_logger.msg("Message must be displayed")
-        [std] Message must be displayed
+        [test.msg.std] Message must be displayed
         >>> laconic_logger.msg("Message must be displayed")
-        [lac] Message must be displayed
+        [test.msg.lac] Message must be displayed
 
         Print according to verbosity
         -------------------------------------
@@ -217,17 +252,17 @@ class ProgressAndLog(Logger):
 
         False
         >>> verbose_logger.msg("Message must be displayed", verbosity=False)
-        [ver] Message must be displayed
+        [test.msg.ver] Message must be displayed
         >>> standard_logger.msg("Message must'nt be displayed", verbosity=False)
         >>> laconic_logger.msg("Message must'nt be displayed", verbosity=False)
 
         True
         >>> verbose_logger.msg("Message must be displayed", verbosity=True)
-        [ver] Message must be displayed
+        [test.msg.ver] Message must be displayed
         >>> standard_logger.msg("Message must be displayed", verbosity=True)
-        [std] Message must be displayed
+        [test.msg.std] Message must be displayed
         >>> laconic_logger.msg("Message must be displayed", verbosity=True)
-        [lac] Message must be displayed
+        [test.msg.lac] Message must be displayed
 
         0 (same for 1)
         >>> verbose_logger.msg("Message mustn' be displayed", verbosity=0)
@@ -236,24 +271,24 @@ class ProgressAndLog(Logger):
 
         DEBUG (10)
         >>> verbose_logger.msg("Message must be displayed", verbosity=DEBUG)
-        [ver] Message must be displayed
+        [test.msg.ver] Message must be displayed
         >>> standard_logger.msg("Message must'nt be displayed", verbosity=DEBUG)
         >>> laconic_logger.msg("Message must'nt be displayed", verbosity=DEBUG)
 
         INFO (20)
         >>> verbose_logger.msg("Message must be displayed", verbosity=INFO)
-        [ver] Message must be displayed
+        [test.msg.ver] Message must be displayed
         >>> standard_logger.msg("Message must be displayed", verbosity=INFO)
-        [std] Message must be displayed
+        [test.msg.std] Message must be displayed
         >>> laconic_logger.msg("Message must'nt be displayed", verbosity=INFO)
 
         WARN (30)
         >>> verbose_logger.msg("Message must be displayed", verbosity=WARNING)
-        [ver] Message must be displayed
+        [test.msg.ver] Message must be displayed
         >>> standard_logger.msg("Message must be displayed", verbosity=WARNING)
-        [std] Message must be displayed
+        [test.msg.std] Message must be displayed
         >>> laconic_logger.msg("Message must be displayed", verbosity=WARNING)
-        [lac] Message must be displayed
+        [test.msg.lac] Message must be displayed
 
         Play with verbosity offset
         --------------------------
@@ -261,7 +296,7 @@ class ProgressAndLog(Logger):
         >>> laconic_logger.msg("Message must'nt be displayed", verbosity=False)
         >>> laconic_logger.set_offset(-10) # relative to general level which is INFO
         >>> laconic_logger.msg("Message must be displayed", verbosity=False)
-        [lac] Message must be displayed
+        [test.msg.lac] Message must be displayed
         >>> laconic_logger.add_to_offset(20)
         ... #add_to_offset will get us back to the initial +10 value
         >>> laconic_logger.msg("Message must'nt be displayed", verbosity=False)
@@ -481,6 +516,39 @@ class ProgressAndLog(Logger):
         self._maybe_percentage_msg()
 
     def percent_target(self, value):
+        """
+        Call this to set the number of expected iterations
+        Also call percent_print_every()
+        >>> logger = get_logger("test.percent")
+        >>> logger.percent_print_every(10)
+        ... # every 10 percent, requires a target
+        >>> logger.percent_target(1000) # the scale. rename function?
+        >>> logger.dot_every(0)
+        >>> logger.progress_every(0)
+        >>> for count in range(2000):
+        ...     logger.progress_step()
+        [test.percent] 0%
+        [test.percent] 10%
+        [test.percent] 20%
+        [test.percent] 30%
+        [test.percent] 40%
+        [test.percent] 50%
+        [test.percent] 60%
+        [test.percent] 70%
+        [test.percent] 80%
+        [test.percent] 90%
+        [test.percent] 100%
+        [test.percent] 110%
+        [test.percent] 120%
+        [test.percent] 130%
+        [test.percent] 140%
+        [test.percent] 150%
+        [test.percent] 160%
+        [test.percent] 170%
+        [test.percent] 180%
+        [test.percent] 190%
+        [test.percent] 200%
+        """
         self._percent_target = value
 
     def progress_complete(self, verbosity=None):
@@ -491,6 +559,14 @@ class ProgressAndLog(Logger):
 
         verbosity has the same meaning as in ProgressAndLog.dot
         and ProgressAndLog.msg
+        >>> logger = get_logger("test.progress_logger")
+
+        # inhibit dots
+        >>> progress_logger.set_offset(+10)
+        >>> for count in range(2000):
+        ...     logger.progress_step()
+        >>> logger.progress_complete()
+        [test.progress_complete] Successfully completed 2000 iterations
         """
         self.msg("Successfully completed %d iterations" % self._iterations)
         self._iterations = 0
