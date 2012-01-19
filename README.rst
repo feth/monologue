@@ -134,8 +134,6 @@ Roadmap
     the handling of newlines may be a little tricky.
     A workaround is that the dev uses separate loggers (different names)
     if they intend to log to files and show progress.
-- Lazy string formatting
-    take advantage of this feature from logging (with a keyword)
 - easy access to a log format that includes timestamp
         with an on/off switch and strptime format
 - Color_?
