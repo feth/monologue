@@ -168,6 +168,7 @@ class ProgressAndLog(Logger):
         Always print if verbosity not specified
         -------------------------------------
 
+        #boilerplate initialization
         >>> from logging import DEBUG, INFO, WARNING
         >>> reset_newline()
 
