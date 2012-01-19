@@ -214,7 +214,7 @@ class ProgressAndLog(Logger):
     debug, info, warning, critical = (_textlogger_factory(Logger, name)
         for name in 'debug info warning critical'.split())
 
-    def msg(self, message, verbosity=None):
+    def msg(self, message, verbosity=None, msgvars=()):
         """
         Prints out an msg.
         Conditionnal to verbosity settings
@@ -225,6 +225,13 @@ class ProgressAndLog(Logger):
         verbosity: optional; boolean or integer.
             if False, the message is only displayed when the logger
             is as verbose as DEBUG or more
+        msgvars: string, tuple or mapping (dict)
+            as suitable for text suitable for substitution.
+            message will be logged as ``message % msgvars``
+
+        msgvars allows for late evaluation of string formatting, therefore
+        the formatting is not performed if the message should not be displayed
+        at all
 
         Always print if verbosity not specified
         -------------------------------------
@@ -294,12 +301,26 @@ class ProgressAndLog(Logger):
         --------------------------
         For absolute verbosity, use setLevel (see below).
         >>> laconic_logger.msg("Message must'nt be displayed", verbosity=False)
-        >>> laconic_logger.set_offset(-10) # relative to general level which is INFO
+        >>> laconic_logger.set_offset(-10) # relative to general level
+        ... # which is INFO
         >>> laconic_logger.msg("Message must be displayed", verbosity=False)
         [test.msg.lac] Message must be displayed
         >>> laconic_logger.add_to_offset(20)
         ... #add_to_offset will get us back to the initial +10 value
         >>> laconic_logger.msg("Message must'nt be displayed", verbosity=False)
+
+        Add some formatting
+        --------------------
+        >>> logger = get_logger("test.msg_placeholder")
+        >>> logger.msg("Message with 1 placeholder [[%s]]",
+        ... msgvars="placed_data")
+        [test.msg_placeholder] Message with 1 placeholder [[placed_data]]
+        >>> logger.msg("Message with 2 placeholders [[%s]] [[%s]]",
+        ... msgvars=("data 1", "data 2"))
+        [test.msg_placeholder] Message with 2 placeholders [[data 1]] [[data 2]]
+        >>> logger.msg("Message with dict formatting [[%(value 1)s, "
+        ... "%(value 2)s]]", msgvars={"value 1": "aaa", "value 2": "bbb"},)
+        [test.msg_placeholder] Message with dict formatting [[aaa, bbb]]
 
         """
         if verbosity in (True, None):
@@ -307,7 +328,11 @@ class ProgressAndLog(Logger):
         elif verbosity is False:
             verbosity = DEBUG
         _set_out_type(TEXT)
-        Logger.log(self, verbosity, message)
+        if isinstance(msgvars, (basestring, dict)):
+            Logger.log(self, verbosity, message, msgvars)
+        else:
+            # Logger.log wants sequences to be given as *args
+            Logger.log(self, verbosity, message, *msgvars)
 
     def dot(self, verbosity=None):
         """
