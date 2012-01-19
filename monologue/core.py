@@ -559,10 +559,10 @@ class ProgressAndLog(Logger):
 
         verbosity has the same meaning as in ProgressAndLog.dot
         and ProgressAndLog.msg
-        >>> logger = get_logger("test.progress_logger")
+        >>> logger = get_logger("test.progress_complete")
 
         # inhibit dots
-        >>> progress_logger.set_offset(+10)
+        >>> logger.set_offset(+10)
         >>> for count in range(2000):
         ...     logger.progress_step()
         >>> logger.progress_complete()
