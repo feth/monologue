@@ -135,7 +135,7 @@ Roadmap
 - easy access to a log format that includes timestamp
         with an on/off switch and strptime format
 - Color_?
-    I doubt this works on Windows.
+    Also look for a Windows solution.
 - Use configuration files?
     For some of the above features.
 
