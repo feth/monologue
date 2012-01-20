@@ -661,7 +661,11 @@ def get_logger(name, verbosity_offset=0):
     if logger is None:
         logger = ProgressAndLog(name, verbosity_offset=verbosity_offset)
         _LOGGERS[name] = logger
-        # verbosity_offset is ignored after the 1st call
+        # verbosity_offset is ignored after the 1st call with a given name.
+        # should we change it instead?
+        # Principle of least astonishment drives me towards wanting
+        # the removal of the keyword ``verbosity_offset`` in get_logger().
+        # Comments welcome.
     return logger
 
 
