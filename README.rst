@@ -127,8 +127,6 @@ Here be docs; for now there only is a huge doctest.
 Roadmap
 =======
 
-- Handle CR/LF as well as ``\n``
-    Read sys.platform, act accordingly.
 - Handle other streams than sys.stdout
     If progress dots are to be printed on random streams,
     the handling of newlines may be a little tricky.

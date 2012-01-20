@@ -56,6 +56,7 @@ For now, a doctest in monologue/tests/
 
 from __future__ import division
 import sys
+import os
 from logging import DEBUG, CRITICAL, Formatter, INFO, Logger, StreamHandler
 from functools import wraps
 
@@ -95,7 +96,7 @@ def _set_out_type(new):
         #no change
         return
     elif new == TEXT:
-        sys.stdout.write('\n')
+        sys.stdout.write(os.linesep)
     LAST_OUT = new
 
 
