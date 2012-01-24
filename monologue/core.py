@@ -189,6 +189,7 @@ class ProgressAndLog(Logger):
         self._next_percent_print = _NEVER_PERCENT_VALUE
         self._percent_target = _NEVER_PERCENT_VALUE
         self._logfiles = []
+        self._dot_logfiles = []
 
         self._formatter = Formatter(fmt="[%(name)s] %(message)s")
 
@@ -201,7 +202,7 @@ class ProgressAndLog(Logger):
     debug, info, warning, critical, log = (_textlogger_factory(Logger, name)
         for name in 'debug info warning critical log'.split())
 
-    def add_logfile(self, logfile):
+    def add_logfile(self, logfile, dots=True):
         """
         Parameters
         ----------
@@ -221,6 +222,8 @@ class ProgressAndLog(Logger):
         self.addHandler(handler)
 
         self._logfiles.append(logfile)
+        if dots:
+            self._dot_logfiles.append(logfile)
 
     def msg(self, message, verbosity=None, msgvars=()):
         """
@@ -416,11 +419,11 @@ class ProgressAndLog(Logger):
             # Not None or a bool? expecting an int
             output = self._offset <= REFERENCE_LEVEL - verbosity
         if output:
-            for logfile in self._logfiles:
+            for logfile in self._dot_logfiles:
                 self._set_out_type(logfile, DOT)
             if dot_string is None:
                 dot_string = self._dot_string
-            for logfile in self._logfiles:
+            for logfile in self._dot_logfiles:
                 logfile.write(dot_string)
 
     def set_offset(self, offset):
