@@ -74,6 +74,17 @@ def test_filename():
 
 
 def test_add_logfile():
-    logger = get_logger("test.add_logfile")
-    # TODO
+    directory = mkdtemp()
+    first_filename = os.path.join(directory, "first_file.log")
+    second_filename = os.path.join(directory, "second_file.log")
+    logger = get_logger("test.add_logfile", logfile=first_filename)
+    logger.add_logfile(second_filename)
 
+    _log_sequence(logger)
+
+    _check_logfile(first_filename, "test.add_logfile")
+    _check_logfile(second_filename, "test.add_logfile")
+
+    os.unlink(first_filename)
+    os.unlink(second_filename)
+    os.rmdir(directory)
