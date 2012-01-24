@@ -59,6 +59,7 @@ import sys
 import os
 from logging import DEBUG, CRITICAL, Formatter, INFO, Logger, StreamHandler
 from functools import wraps
+from weakref import WeakKeyDictionary
 
 
 DOT = 0
@@ -67,37 +68,13 @@ PROGRESS = INFO - 5  # == DEBUG + 5
 REFERENCE_LEVEL = PROGRESS
 DEFAULT_DOT_CHAR = "."
 
-# global variable (baah) for output type
-LAST_OUT = TEXT
-
 # used by getLogger
 _LOGGERS = {}
+#used by _set_out_type
+_OUT_TYPES = WeakKeyDictionary()
 
 # In order to never print a percent indicator, the finite value for 'never'
 _NEVER_PERCENT_VALUE = 0
-
-
-def _set_out_type(new):
-    """
-    As we  don't want to mix progress dots and text on the same line,
-    we insert a linebreak whenever the output type changes.
-
-    Parameters
-    ----------
-    new: DOT or TEXT
-    """
-    global LAST_OUT
-
-    if LAST_OUT is None:
-        # initialize and return
-        LAST_OUT = new
-        return
-    elif new == LAST_OUT:
-        #no change
-        return
-    elif new == TEXT:
-        sys.stdout.write(os.linesep)
-    LAST_OUT = new
 
 
 def _textlogger_factory(klass, attr_name):
@@ -112,9 +89,10 @@ def _textlogger_factory(klass, attr_name):
     func = getattr(klass, attr_name)
 
     @wraps(func)
-    def new_func(*args, **kwargs):
-        _set_out_type(TEXT)
-        func(*args, **kwargs)
+    def new_func(self, *args, **kwargs):
+        self._set_out_type(TEXT)
+        return func(self, *args, **kwargs)
+
     return new_func
 
 
@@ -130,8 +108,6 @@ class ProgressAndLog(Logger):
     ========================================
     #boilerplate initialization
     >>> from logging import DEBUG, INFO, WARNING
-    >>> reset_newline()
-
     >>> verbose_logger = get_logger("test.logging.ver", verbosity_offset=-10)
     >>> standard_logger = get_logger("test.logging.std")
     >>> laconic_logger = get_logger("test.logging.lac", verbosity_offset=+10)
@@ -188,7 +164,20 @@ class ProgressAndLog(Logger):
     xxxxxxxxxx
     [test.mix_progress_dots] Iteration 2000 done
     """
-    def __init__(self, name, verbosity_offset):
+    def __init__(self, name, verbosity_offset, logfile=None):
+        """
+        Parameters
+        ----------
+
+        name: string
+            is likely to end up between
+            brackets at the beggining of each message
+        verbosity_offset: integer
+            see add_to_offset and the like
+        logfile: open file, optional, default: sys.stdout
+            we'll log messages and progress there.
+
+        """
         Logger.__init__(self, name)
 
         # overwritten by set_offset
@@ -203,7 +192,10 @@ class ProgressAndLog(Logger):
 
         formatter = Formatter(fmt="[%(name)s] %(message)s")
 
-        handler = StreamHandler(sys.stdout)
+        if logfile is None:
+            logfile = sys.stdout
+        self._logfile = logfile
+        handler = StreamHandler(self._logfile)
         handler.setFormatter(formatter)
 
         self.addHandler(handler)
@@ -242,8 +234,6 @@ class ProgressAndLog(Logger):
 
         #boilerplate initialization
         >>> from logging import DEBUG, INFO, WARNING
-        >>> reset_newline()
-
         >>> verbose_logger = get_logger("test.msg.ver", verbosity_offset=-10)
         >>> standard_logger = get_logger("test.msg.std")
         >>> laconic_logger = get_logger("test.msg.lac", verbosity_offset=+10)
@@ -334,7 +324,7 @@ class ProgressAndLog(Logger):
             verbosity = CRITICAL
         elif verbosity is False:
             verbosity = DEBUG
-        _set_out_type(TEXT)
+        self._set_out_type(TEXT)
         if isinstance(msgvars, tuple):
             # Logger.log wants tuples to be given as *args
             Logger.log(self, verbosity, message, *msgvars)
@@ -360,8 +350,6 @@ class ProgressAndLog(Logger):
 
         #boilerplate initialization
         >>> from logging import DEBUG, INFO, WARNING
-        >>> reset_newline()
-
         >>> verbose_logger = get_logger("ver", verbosity_offset=-10)
         >>> standard_logger = get_logger("std")
         >>> laconic_logger = get_logger("lac", verbosity_offset=+10)
@@ -413,10 +401,10 @@ class ProgressAndLog(Logger):
             # Not None or a bool? expecting an int
             output = self._offset <= REFERENCE_LEVEL - verbosity
         if output:
-            _set_out_type(DOT)
+            self._set_out_type(DOT)
             if dot_string is None:
                 dot_string = self._dot_string
-            sys.stdout.write(dot_string)
+            self._logfile.write(dot_string)
 
     def set_offset(self, offset):
         """
@@ -652,27 +640,43 @@ class ProgressAndLog(Logger):
         """
         self._percent_print_every = value
 
+    def _set_out_type(self, new):
+        """
+        As we  don't want to mix progress dots and text on the same line,
+        we insert a linebreak whenever the output type changes.
 
-def get_logger(name, verbosity_offset=0):
+        Parameters
+        ----------
+        new: DOT or TEXT
+        """
+        if self._logfile not in _OUT_TYPES:
+            _OUT_TYPES[self._logfile] = TEXT
+            last_out = TEXT
+        else:
+            last_out = _OUT_TYPES[self._logfile]
+
+        if new == last_out:
+            return
+        elif new == TEXT:
+            self._logfile.write(os.linesep)
+
+        _OUT_TYPES[self._logfile] = new
+
+
+def get_logger(name, verbosity_offset=0, logfile=None):
     """
     Provides a logger with specified name.
     """
     logger = _LOGGERS.get(name)
     if logger is None:
-        logger = ProgressAndLog(name, verbosity_offset=verbosity_offset)
+        logger = ProgressAndLog(name, verbosity_offset=verbosity_offset,
+                logfile=logfile)
         _LOGGERS[name] = logger
         # verbosity_offset is ignored after the 1st call with a given name.
         # should we change it instead?
         # Principle of least astonishment drives me towards wanting
         # the removal of the keyword ``verbosity_offset`` in get_logger().
+        # Also, what to to when a logger is configured with a given logfile and
+        # the second call asks for another? yell to stderr?
         # Comments welcome.
     return logger
-
-
-def reset_newline():
-    """
-    Ensure you don't get a spurious \n when logging
-    in weird conditions after re-importing this module
-    """
-    global LAST_OUT
-    LAST_OUT = TEXT
