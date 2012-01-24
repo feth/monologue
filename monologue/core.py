@@ -174,8 +174,10 @@ class ProgressAndLog(Logger):
             brackets at the beggining of each message
         verbosity_offset: integer
             see add_to_offset and the like
-        logfile: open file, optional, default: sys.stdout
+        logfile: string or open file, optional, default: sys.stdout
             we'll log messages and progress there.
+            if a string is supplied, it is assumed to be the path where to log
+            The file will be created or appended to.
 
         """
         Logger.__init__(self, name)
@@ -194,6 +196,8 @@ class ProgressAndLog(Logger):
 
         if logfile is None:
             logfile = sys.stdout
+        elif isinstance(logfile, basestring):
+            logfile = open(logfile, 'ab')
         self._logfile = logfile
         handler = StreamHandler(self._logfile)
         handler.setFormatter(formatter)
