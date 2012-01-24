@@ -164,7 +164,7 @@ class ProgressAndLog(Logger):
     xxxxxxxxxx
     [test.mix_progress_dots] Iteration 2000 done
     """
-    def __init__(self, name, verbosity_offset, logfile=None):
+    def __init__(self, name, verbosity_offset, logfile=None, timestamp=False):
         """
         Parameters
         ----------
@@ -191,7 +191,11 @@ class ProgressAndLog(Logger):
         self._logfiles = []
         self._dot_logfiles = []
 
-        self._formatter = Formatter(fmt="[%(name)s] %(message)s")
+        if timestamp:
+            fmt = "[%(asctime)s][%(name)s] %(message)s"
+        else:
+            fmt = "[%(name)s] %(message)s"
+        self._formatter = Formatter(fmt=fmt)
 
         self.add_logfile(logfile)
 
@@ -683,14 +687,14 @@ class ProgressAndLog(Logger):
             _OUT_TYPES[logfile] = new
 
 
-def get_logger(name, verbosity_offset=0, logfile=None):
+def get_logger(name, verbosity_offset=0, logfile=None, timestamp=False):
     """
     Provides a logger with specified name.
     """
     logger = _LOGGERS.get(name)
     if logger is None:
         logger = ProgressAndLog(name, verbosity_offset=verbosity_offset,
-                logfile=logfile)
+                logfile=logfile, timestamp=timestamp)
         _LOGGERS[name] = logger
         # verbosity_offset is ignored after the 1st call with a given name.
         # should we change it instead?
