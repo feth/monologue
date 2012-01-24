@@ -676,7 +676,7 @@ def get_logger(name, verbosity_offset=0, logfile=None):
         # should we change it instead?
         # Principle of least astonishment drives me towards wanting
         # the removal of the keyword ``verbosity_offset`` in get_logger().
-        # Also, what to to when a logger is configured with a given logfile and
+        # Also, what to to when a logger is configured with a given logfile and
         # the second call asks for another? yell to stderr?
         # Comments welcome.
     return logger
