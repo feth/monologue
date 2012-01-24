@@ -90,7 +90,7 @@ def _textlogger_factory(klass, attr_name):
 
     @wraps(func)
     def new_func(self, *args, **kwargs):
-        self._set_all_out_text()
+        self._set_out_type(TEXT)
         return func(self, *args, **kwargs)
 
     return new_func
@@ -342,7 +342,7 @@ class ProgressAndLog(Logger):
             verbosity = CRITICAL
         elif verbosity is False:
             verbosity = DEBUG
-        self._set_all_out_text()
+        self._set_out_type(TEXT)
         if isinstance(msgvars, tuple):
             # Logger.log wants tuples to be given as *args
             Logger.log(self, verbosity, message, *msgvars)
@@ -419,10 +419,9 @@ class ProgressAndLog(Logger):
             # Not None or a bool? expecting an int
             output = self._offset <= REFERENCE_LEVEL - verbosity
         if output:
-            for logfile in self._dot_logfiles:
-                self._set_out_type(logfile, DOT)
             if dot_string is None:
                 dot_string = self._dot_string
+            self._set_out_type(DOT)
             for logfile in self._dot_logfiles:
                 logfile.write(dot_string)
 
@@ -660,7 +659,7 @@ class ProgressAndLog(Logger):
         """
         self._percent_print_every = value
 
-    def _set_out_type(self, logfile, new):
+    def _set_out_type(self, new):
         """
         As we  don't want to mix progress dots and text on the same line,
         we insert a linebreak whenever the output type changes.
@@ -669,22 +668,19 @@ class ProgressAndLog(Logger):
         ----------
         new: DOT or TEXT
         """
-        if logfile not in _OUT_TYPES:
-            _OUT_TYPES[logfile] = TEXT
-            last_out = TEXT
-        else:
-            last_out = _OUT_TYPES[logfile]
+        for logfile in self._dot_logfiles:
+            if logfile not in _OUT_TYPES:
+                _OUT_TYPES[logfile] = TEXT
+                last_out = TEXT
+            else:
+                last_out = _OUT_TYPES[logfile]
 
-        if new == last_out:
-            return
-        elif new == TEXT:
-            logfile.write(os.linesep)
+            if new == last_out:
+                continue
+            elif new == TEXT:
+                logfile.write(os.linesep)
 
-        _OUT_TYPES[logfile] = new
-
-    def _set_all_out_text(self):
-        for logfile in self._logfiles:
-            self._set_out_type(logfile, TEXT)
+            _OUT_TYPES[logfile] = new
 
 
 def get_logger(name, verbosity_offset=0, logfile=None):
