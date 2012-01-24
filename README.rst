@@ -127,11 +127,8 @@ Here be docs; for now there only is a huge doctest.
 Roadmap
 =======
 
-- Handle other streams than sys.stdout
-    If progress dots are to be printed on random streams,
-    the handling of newlines may be a little tricky.
-    A workaround is that the dev uses separate loggers (different names)
-    if they intend to log to files and show progress.
+- handle several file descriptors for logging? also, maybe some with
+  progress info, some others without.
 - easy access to a log format that includes timestamp
         with an on/off switch and strptime format
 - Color_?
@@ -151,6 +148,8 @@ Tell me if anything could be done better to suit you.
 Code is developped on github: https://github.com/joblib/ ::
 
         git clone https://github.com/joblib/joblib.git
+
+(will be, actually. we're still on our own in monologue)
 
 Follow good practices.
 
