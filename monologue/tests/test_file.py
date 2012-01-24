@@ -1,6 +1,5 @@
 from monologue import get_logger
 from tempfile import mkdtemp, mkstemp
-import nose
 import os
 import sys
 
@@ -20,11 +19,11 @@ def _log_sequence(logger):
 
 _LOG = 0
 _DOTS = 1
-_EXPECTED = ((_LOG, "[%(logger_name)s] hello 1"),
-        (_LOG, "[%(logger_name)s] hello 2"),
-        (_DOTS, "x"*50),
-        (_LOG, "[%(logger_name)s] Successfully completed 100 iterations"),
-        (_LOG, "[%(logger_name)s] hello 2"))
+_EXPECTED = ((_LOG, "[%(logger_name)s] hello 1\n"),
+        (_LOG, "[%(logger_name)s] hello 2\n"),
+        (_DOTS, "x"*50 + "\n"),
+        (_LOG, "[%(logger_name)s] Successfully completed 100 iterations\n"),
+        (_LOG, "[%(logger_name)s] hello 3\n"))
 
 def _expected(logger_name, logs=True, dots=True):
     """
@@ -38,10 +37,17 @@ def _expected(logger_name, logs=True, dots=True):
 
 def _check_logfile(filename, logger_name, logs=True, dots=True):
     with open(filename, 'r') as fdesc:
-        expected = _expected(logger_name)
-        for line in fdesc:
-            line == expected.next()
-    nose.tools.assert_raises(StopIteration, expected.next)
+        expected_total = ''.join(_expected(logger_name, logs=logs, dots=dots))
+        read_total = fdesc.read()
+    assert read_total == expected_total, "expected: <<%s>>, got <<%s>>" \
+                    % (expected_total, read_total)
+
+def test_expected():
+    """
+    test the test
+    """
+    for line in _expected("a name", dots=False):
+        assert "xxxxxxxx" not in line
 
 def test_fdesc():
     """
@@ -85,6 +91,25 @@ def test_add_logfile():
     _check_logfile(first_filename, "test.add_logfile")
     _check_logfile(second_filename, "test.add_logfile")
 
+    os.unlink(first_filename)
+    os.unlink(second_filename)
+    os.rmdir(directory)
+
+def test_add_logfile_nodots():
+    directory = mkdtemp()
+    first_filename = os.path.join(directory, "first_file.log")
+    second_filename = os.path.join(directory, "second_file.log")
+    logger_name = "test.add_logfile_nodots"
+    logger = get_logger(logger_name, logfile=first_filename)
+    logger.add_logfile(second_filename, dots=False)
+
+    _log_sequence(logger)
+
+    _check_logfile(first_filename, logger_name)
+    _check_logfile(second_filename, logger_name, dots=False)
+
+    with open(second_filename, 'r') as fd:
+        assert "xxxxx" not in fd.read()
     os.unlink(first_filename)
     os.unlink(second_filename)
     os.rmdir(directory)
