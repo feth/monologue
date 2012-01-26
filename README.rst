@@ -11,6 +11,13 @@ This Python module offers an interface to unify:
     about an ongoing computation.
 
 
+WARNING
+#########
+
+It seems github is not rendering this rst file correctly. Until I fix this, I advise you to run ``make pdf``
+in the source directory.
+
+
 .. contents::
 
 .. sectnum::
