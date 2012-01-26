@@ -24,13 +24,22 @@ See COPYING: New BSD license (open to discussion).
 Requirements and compatibility
 ==============================
 
-.. TODO
+Requirements
+.............
+Stock Python and a terminal
 
-Target to day is stock Python 2.5-7 with no requirement.
+Target
+.......
+
+Dev target to day is stock Python 2.5-7 with no requirement. In a near future, many other versions of Python.
+
+
+Tested on
+..........
 
 This works on Python 2.7/Linux.
 
-Here be moreinfo.
+.. TODO
 
 Concept
 =========
@@ -38,6 +47,9 @@ Concept
 This is meant to be 'easy' to use, even for non computer scientists and
 required to work well even on very minimal exotic platforms such as Windows
 console terminals.
+
+Why
+...........
 
 The light from the most beautiful nebulae far up in the sky travels a long
 time to reach us; likewise, it may be that a lot of computational time
@@ -119,7 +131,148 @@ before an informative message.
 How to use
 ===========
 
-Here be docs; for now there only is a huge doctest.
+Basic usage
+............
+
+Everything you need to read to get started.
+
+Boilerplate
+~~~~~~~~~~~~
+
+After importing, you have to define one or several loggers with explicite names.
+
+.. code-block:: python
+
+    from monologue import get_logger
+    logger = get_logger("explicite name")
+
+Drop in replacement for ``print``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Instead of
+
+.. code-block:: python
+
+    print "Message I intend to convey"
+
+use
+
+.. code-block:: python
+
+    logger.msg("Message I intend to convey")
+
+
+Spit (custom) dots on demand
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+See the calls to ``logger.dot`` in this example:
+
+.. code-block:: python
+
+    def fly_to_1(x):
+        """
+        Given x an positive integer, the loop in this function is
+        believed to stop (but there is no math proof of this yet).
+        """
+
+        while x != 1:
+            # Simplest way to indicate loops:
+            logger.dot()
+
+            # Display intermediate results:
+            logger.dot(dot_string='[%d]' % x)
+
+            if x % 2 == 0:  # if x is odd
+                x /= 2  # halve x
+            else:
+                x = 3 * x + 1
+
+
+Set an alternate char or string for use as dot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Normally, you'd get plain dots:
+
+.. code-block:: python
+
+    for i in xrange(5):
+        logger.dot()
+
+gives::
+
+    .....
+
+whereas
+
+.. code-block:: python
+
+    logger.set_dot_str("x")
+    for i in xrange(5):
+        logger.dot()
+
+gives::
+
+    xxxxx
+
+
+Mixing dots and messages
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Of course you can mix dots and informative messages.
+This code
+
+.. code-block:: python
+
+    for x in xrange(10):
+        logger.dot()
+        if x == 5:
+            logger.msg("x is 5!")
+
+produces::
+
+    xxxxxx
+    [explicite name] x is 5!
+    xxxx
+
+Automatic progress notification (with dots)
+............................................
+
+You can delegate the count of iterations to the logger.
+For instance, let's rewrite ``fly_to_1``.
+
+.. code-block:: python
+
+    # Configure: a dot every 10 steps
+    logger.dot_every(10)
+
+    # Configure: progress message every 100 steps
+    logger.progress_every(100)
+
+    # Optional: reset the number of iterations
+    logger.progress_reset()
+
+    while x != 1:
+
+        # count one step
+        logger.step()
+
+        if x % 2 == 0:  # if x is odd
+            x /= 2  # halve x
+        else:
+            x = 3 * x + 1
+
+    logger.complete()
+
+Several log files (including stdout)
+....................................
+
+.. TODO
+
+Partial log: messages or dots only
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Add a timestamp to messages
+............................
 
 .. TODO
 
