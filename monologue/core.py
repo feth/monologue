@@ -652,7 +652,8 @@ class ProgressAndLog(Logger):
         >>> logger.progress_complete()
         [test.progress_complete] Successfully completed 2000 iterations
         """
-        self.msg("Successfully completed %d iterations" % self._iterations)
+        self.msg("Successfully completed %d iterations" % self._iterations,
+                verbosity=verbosity)
         self._iterations = 0
         self._next_percent_print = _NEVER_PERCENT_VALUE
         self._percent_target = _NEVER_PERCENT_VALUE
