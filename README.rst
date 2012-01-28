@@ -2,7 +2,7 @@
 MONOLOGUE
 ==========
 
-Main documentation: http://github.com/feth/monologue/not_uploaded_yet
+Main documentation: http://feth.github.com/monologue/
 
 .. include:: whatsthis.rst
 
