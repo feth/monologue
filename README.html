@@ -1,0 +1,226 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>MONOLOGUE &mdash; monologue 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="monologue 0.1 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="index.html">monologue 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="monologue">
+<h1>MONOLOGUE<a class="headerlink" href="#monologue" title="Permalink to this headline">¶</a></h1>
+<p>Main documentation: <a class="reference external" href="http://github.com/feth/monologue/not_uploaded_yet">http://github.com/feth/monologue/not_uploaded_yet</a></p>
+<p><em>monologue</em> is a Python module unifying the main features related to the text
+output of scientific programs in a single interface:</p>
+<ul>
+<li><dl class="first docutils">
+<dt>logging</dt>
+<dd><p class="first last">basically, the standard Python <em>logging</em> library is preconfigured by
+<em>monologue</em> to fit most needs so as to save time and enjoy a
+comfortable text output.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>progress information</dt>
+<dd><p class="first last">manually or automatically display dots, loops count, completion
+percentages, number of iterations about an ongoing computation.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Also, <em>monologue</em> is designed as a single file library that can be copied into
+a code tree.</p>
+<div class="section" id="requirements-and-compatibility">
+<h2>Requirements and compatibility<a class="headerlink" href="#requirements-and-compatibility" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="running">
+<h3>Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h3>
+<p>Stock Python and a terminal</p>
+<p>Dev target to day is stock Python 2.5-7 with no requirement. In a near future, many other versions of Python. Bug reports very much welcome on this matter.</p>
+<p>This works on Python 2.7/Linux.</p>
+</div>
+<div class="section" id="building-this-doc">
+<h3>Building this doc<a class="headerlink" href="#building-this-doc" title="Permalink to this headline">¶</a></h3>
+<p>Tested with sphinx version 1.1.2.</p>
+<div class="section" id="about-this">
+<h4>About this<a class="headerlink" href="#about-this" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="license-information">
+<h5>License information<a class="headerlink" href="#license-information" title="Permalink to this headline">¶</a></h5>
+<div class="compound">
+<p class="compound-first">New BSD License</p>
+<p class="compound-middle">Copyright (c) 2011-2012 Feth Arezki.
+All rights reserved.</p>
+<p class="compound-middle">Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:</p>
+<blockquote class="compound-middle">
+<div><ol class="loweralpha simple">
+<li>Redistributions of source code must retain the above copyright notice,
+this list of conditions and the following disclaimer.</li>
+<li>Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.</li>
+<li>Neither the name of the Monologue Developers nor the names of
+its contributors may be used to endorse or promote products
+derived from this software without specific prior written
+permission.</li>
+</ol>
+</div></blockquote>
+<p class="compound-last">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &#8220;AS IS&#8221;
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+DAMAGE.</p>
+</div>
+</div>
+<div class="section" id="concept">
+<h5>Concept<a class="headerlink" href="#concept" title="Permalink to this headline">¶</a></h5>
+<p><em>monologue</em> is built with ease of use in mind, especially for non software engineers;
+and works well even on very minimal exotic platforms such as Windows console terminals.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Quick features presentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="features.html#feature-logging-a-simpler-api">Feature: logging, a simpler API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#feature-progress-information">Feature: Progress information</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="features.html#running-distance-unknown">Running distance unknown</a></li>
+<li class="toctree-l3"><a class="reference internal" href="features.html#running-distance-known">Running distance known</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#logging-and-progress-combined">Logging and progress combined</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="why-you-should-be-using-monologue">
+<h5>Why you should be using monologue<a class="headerlink" href="#why-you-should-be-using-monologue" title="Permalink to this headline">¶</a></h5>
+<p>The light from the most beautiful nebulae far up in the sky travels a long
+time to reach us; likewise, it may be that a lot of computational time
+separates you from the contemplation of an interesting result after you fed
+a program heaps of data (for instance, modelisation with <a class="reference external" href="http://scikit-learn.org">scikit-learn</a>).</p>
+<p>It is good practice to impress the viewer with details about what&#8217;s going on:
+informative messages and/or progress information.
+The purpose of this Python module is to help you do so.</p>
+<p>If you use <em>monologue</em>, which is not a burden, your code will be more reusable, more embeddable!</p>
+</div>
+<div class="section" id="from-ideas-to-bytes-official-history">
+<h5>From ideas to bytes (official history)<a class="headerlink" href="#from-ideas-to-bytes-official-history" title="Permalink to this headline">¶</a></h5>
+<p>Code monkey is <a class="reference internal" href="authors.html#feth-arezki"><em>Feth Arezki</em></a>. Packaging by Nelle Varoquaux.</p>
+<p>The idea behind this, and many ideas of how it should be done are Gael
+Varoquaux&#8217;s.  Also participated in the discussion, or motivated me: Olivier
+Grisel, Fabian Pedregosa, Nelle Varoquaux. See
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/130">https://github.com/scikit-learn/scikit-learn/pull/130</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">MONOLOGUE</a><ul>
+<li><a class="reference internal" href="#requirements-and-compatibility">Requirements and compatibility</a><ul>
+<li><a class="reference internal" href="#running">Running</a></li>
+<li><a class="reference internal" href="#building-this-doc">Building this doc</a><ul>
+<li><a class="reference internal" href="#about-this">About this</a><ul>
+<li><a class="reference internal" href="#license-information">License information</a></li>
+<li><a class="reference internal" href="#concept">Concept</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#why-you-should-be-using-monologue">Why you should be using monologue</a></li>
+<li><a class="reference internal" href="#from-ideas-to-bytes-official-history">From ideas to bytes (official history)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/README.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="index.html">monologue 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Feth AREZKI.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

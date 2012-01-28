@@ -1,0 +1,153 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Roadmap &mdash; monologue 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="monologue 0.1 documentation" href="index.html" />
+    <link rel="prev" title="API Manual" href="manual.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="manual.html" title="API Manual"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">monologue 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="roadmap">
+<h1>Roadmap<a class="headerlink" href="#roadmap" title="Permalink to this headline">¶</a></h1>
+<ul>
+<li><p class="first">handle several file descriptors for logging? also, maybe some with
+progress info, some others without.</p>
+</li>
+<li><dl class="first docutils">
+<dt>easy access to a log format that includes timestamp</dt>
+<dd><p class="first last">with an on/off switch and strptime format</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="http://stackoverflow.com/questions/384076/how-can-i-make-the-python-logging-output-to-be-colored">Color</a>?</dt>
+<dd><p class="first last">Also look for a Windows solution.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">Log rotation?</p>
+</li>
+<li><p class="first">A <tt class="docutils literal"><span class="pre">ProgressAndLog.child</span></tt> method?
+Such a child would be a logger with the configuration of its parent (log files and so on), but a different name.</p>
+</li>
+<li><p class="first">Setup verbosity per logfile?</p>
+</li>
+<li><dl class="first docutils">
+<dt>Use configuration files?</dt>
+<dd><p class="first last">For some of the above features.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="how-to-dev-contribute-complain">
+<h1>How to dev / contribute / complain<a class="headerlink" href="#how-to-dev-contribute-complain" title="Permalink to this headline">¶</a></h1>
+<p>Tell <a class="reference internal" href="authors.html#authors"><em>Authors</em></a> if anything could be done better to suit you.</p>
+<p>Code is developped on github: <a class="reference external" href="https://github.com/joblib/">https://github.com/joblib/</a></p>
+<div class="highlight-python"><pre>git clone https://github.com/joblib/joblib.git</pre>
+</div>
+<p>(will be, actually. we&#8217;re still on our own in monologue)</p>
+<p>Follow good practices.</p>
+<p>Main gotcha, in testing, is that the default output is stdout.</p>
+<ul class="simple">
+<li>We could replace sys.stdout within the process... and experience problems with the testing framework because it also tries to use sys.stdout</li>
+<li>or use doctest, the path chosen until now.</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Roadmap</a></li>
+<li><a class="reference internal" href="#how-to-dev-contribute-complain">How to dev / contribute / complain</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="manual.html"
+                        title="previous chapter">API Manual</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/roadmap.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="manual.html" title="API Manual"
+             >previous</a> |</li>
+        <li><a href="index.html">monologue 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Feth AREZKI.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

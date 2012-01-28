@@ -1,0 +1,351 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>API Manual &mdash; monologue 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="monologue 0.1 documentation" href="index.html" />
+    <link rel="next" title="Roadmap" href="roadmap.html" />
+    <link rel="prev" title="Install or embed, then import" href="import_or_embed.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="roadmap.html" title="Roadmap"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="import_or_embed.html" title="Install or embed, then import"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">monologue 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="api-manual">
+<h1>API Manual<a class="headerlink" href="#api-manual" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="boilerplate">
+<h3>Boilerplate<a class="headerlink" href="#boilerplate" title="Permalink to this headline">¶</a></h3>
+<p>After importing, you have to define one or several loggers with explicite names.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">monologue</span> <span class="kn">import</span> <span class="n">get_logger</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="s">&quot;explicite name&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="drop-in-replacement-for-print">
+<h3>Drop in replacement for <tt class="docutils literal"><span class="pre">print</span></tt><a class="headerlink" href="#drop-in-replacement-for-print" title="Permalink to this headline">¶</a></h3>
+<p>Instead of</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span> <span class="s">&quot;Message I intend to convey&quot;</span>
+</pre></div>
+</div>
+<p>use</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">logger</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s">&quot;Message I intend to convey&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="spit-custom-dots-on-demand">
+<h4>Spit (custom) dots on demand<a class="headerlink" href="#spit-custom-dots-on-demand" title="Permalink to this headline">¶</a></h4>
+<p>See the calls to <tt class="docutils literal"><span class="pre">logger.dot</span></tt> on lines 13 and 16 of this example:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">fly_to_1</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Given x an positive integer, the loop in this function is</span>
+<span class="sd">    believed to stop (but there is no math proof of this yet).  &quot;&quot;&quot;</span>
+
+    <span class="k">while</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c"># if x is odd</span>
+            <span class="n">x</span> <span class="o">/=</span> <span class="mi">2</span>  <span class="c"># halve x</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="c"># Simplest way to indicate loops:</span>
+<span class="hll">        <span class="n">logger</span><span class="o">.</span><span class="n">dot</span><span class="p">()</span>
+</span>
+        <span class="c"># Display intermediate results:</span>
+<span class="hll">        <span class="n">logger</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dot_string</span><span class="o">=</span><span class="s">&#39;[</span><span class="si">%d</span><span class="s">]&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="p">)</span>
+</span></pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="set-an-alternate-char-or-string-for-use-as-dot">
+<h4>Set an alternate char or string for use as dot<a class="headerlink" href="#set-an-alternate-char-or-string-for-use-as-dot" title="Permalink to this headline">¶</a></h4>
+<p>Normally, you&#8217;d get plain dots:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">dot</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>gives:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="o">.....</span>
+</pre></div>
+</div>
+<p>whereas</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">logger</span><span class="o">.</span><span class="n">set_dot_str</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">dot</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>gives:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">xxxxx</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mixing-dots-and-messages">
+<h4>Mixing dots and messages<a class="headerlink" href="#mixing-dots-and-messages" title="Permalink to this headline">¶</a></h4>
+<p>Of course you can mix dots and informative messages.
+This code</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">dot</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s">&quot;x is 5!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>produces the following output:</p>
+<div class="highlight-python"><pre>xxxxxx
+[explicite name] x is 5!
+xxxx</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="more-in-depth">
+<h2>More in depth<a class="headerlink" href="#more-in-depth" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="automatic-progress-notification-with-dots-and-messages">
+<h3>Automatic progress notification (with dots and messages)<a class="headerlink" href="#automatic-progress-notification-with-dots-and-messages" title="Permalink to this headline">¶</a></h3>
+<p>You can delegate the count of iterations to the logger.
+For instance, let&#8217;s rewrite <tt class="docutils literal"><span class="pre">fly_to_1</span></tt>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Configure: a dot every 10 steps</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">dot_every</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c"># Configure: progress message every 100 steps</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">progress_every</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c"># Optional: reset the number of iterations</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">progress_reset</span><span class="p">()</span>
+
+<span class="k">while</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+
+    <span class="c"># count one step</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c"># if x is odd</span>
+        <span class="n">x</span> <span class="o">/=</span> <span class="mi">2</span>  <span class="c"># halve x</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="n">logger</span><span class="o">.</span><span class="n">complete</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If you know how many batches you are going to handle, you can even provide the user with progress percentages.</p>
+</div>
+<div class="section" id="logger-creation-fetching-and-configuration">
+<h3>Logger creation, fetching and configuration<a class="headerlink" href="#logger-creation-fetching-and-configuration" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="logger-uniqueness">
+<h4>Logger uniqueness<a class="headerlink" href="#logger-uniqueness" title="Permalink to this headline">¶</a></h4>
+<p>Alike to the Python <em>logging</em> API, loggers are created or fetched upon a call to <tt class="docutils literal"><span class="pre">get_logger</span></tt> (<tt class="docutils literal"><span class="pre">getLogger</span></tt> in logging).
+Unique loggers are identified with their names, and parametrized upon creation, ie the first call to <tt class="docutils literal"><span class="pre">get_logger</span></tt> with a given name.</p>
+<p>Here, <tt class="docutils literal"><span class="pre">a</span></tt> and <tt class="docutils literal"><span class="pre">b</span></tt> identify the same object:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="caveat-no-reparametrization-upon-further-calls-to-get-logger">
+<h4>Caveat: no reparametrization upon further calls to <tt class="docutils literal"><span class="pre">get_logger</span></tt><a class="headerlink" href="#caveat-no-reparametrization-upon-further-calls-to-get-logger" title="Permalink to this headline">¶</a></h4>
+<p>Many caracteristics of a logger can be configured upon the creation of a logger, by using optional keywords when calling <tt class="docutils literal"><span class="pre">get_logger</span></tt>; however, later calls with a given logger name will only return a reference to a previously created logger.</p>
+<p>It may be a good practice to use different thematic loggers, with different names, in different source files, or even in functions.</p>
+</div>
+<div class="section" id="specify-log-files-including-stdout">
+<h4>Specify log files (including stdout)<a class="headerlink" href="#specify-log-files-including-stdout" title="Permalink to this headline">¶</a></h4>
+<p><em>monologue</em> can log to arbitrary places.</p>
+<div class="section" id="logfile-keyword-of-get-logger">
+<span id="logfile-keyword"></span><h5><tt class="docutils literal"><span class="pre">logfile</span></tt> keyword of <tt class="docutils literal"><span class="pre">get_logger</span></tt><a class="headerlink" href="#logfile-keyword-of-get-logger" title="Permalink to this headline">¶</a></h5>
+<p>If no <tt class="docutils literal"><span class="pre">logfile</span></tt> keyword is specified to the first call to <tt class="docutils literal"><span class="pre">get_logger</span></tt> with a given name, the output defaults to <tt class="docutils literal"><span class="pre">sys.stdout</span></tt>, making <em>monologue</em> a drop-in replacement for <tt class="docutils literal"><span class="pre">print</span></tt>.</p>
+<p><tt class="docutils literal"><span class="pre">logfile</span></tt> can be either:</p>
+<ul class="simple">
+<li>a file handler open for writing</li>
+<li>a filename, that will be open in <strong>append</strong> mode.</li>
+</ul>
+</div>
+<div class="section" id="add-logfile-method-of-progressandlog">
+<h5><tt class="docutils literal"><span class="pre">add_logfile</span></tt> method of <tt class="docutils literal"><span class="pre">ProgressAndLog</span></tt><a class="headerlink" href="#add-logfile-method-of-progressandlog" title="Permalink to this headline">¶</a></h5>
+</div>
+</div>
+<div class="section" id="partial-log-messages-or-dots-only">
+<h4>Partial log: messages or dots only<a class="headerlink" href="#partial-log-messages-or-dots-only" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="add-a-timestamp-to-messages">
+<h4>Add a timestamp to messages<a class="headerlink" href="#add-a-timestamp-to-messages" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="lazy-formatting-of-messages">
+<h4>Lazy formatting of messages<a class="headerlink" href="#lazy-formatting-of-messages" title="Permalink to this headline">¶</a></h4>
+<p>This is a feature of <tt class="docutils literal"><span class="pre">logging</span></tt>: a message that is not displayed because its importance does not match the verbosity of the logger will not be formatted at all.
+In order to benefit from this optimization, replace</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">logger</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s">&quot;This message is about </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">subject</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>by</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">logger</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s">&quot;This message is about </span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">msgvars</span><span class="o">=</span><span class="n">subject</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">logger</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s">&quot;This </span><span class="si">%(adjective)s</span><span class="s"> message is about </span><span class="si">%(subject)s</span><span class="s">&quot;</span> <span class="o">%</span>
+    <span class="p">{</span><span class="s">&#39;adjective&#39;</span><span class="p">:</span> <span class="s">&#39;dumb&#39;</span><span class="p">,</span> <span class="s">&#39;subject&#39;</span><span class="p">:</span> <span class="n">subject</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>by</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">logger</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="s">&quot;This </span><span class="si">%(adjective)s</span><span class="s"> message is about </span><span class="si">%(subject)s</span><span class="s">&quot;</span><span class="p">,</span>
+    <span class="n">msgvars</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;adjective&#39;</span><span class="p">:</span> <span class="s">&#39;dumb&#39;</span><span class="p">,</span> <span class="s">&#39;subject&#39;</span><span class="p">:</span> <span class="n">subject</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="verbosity-control">
+<h4>Verbosity control<a class="headerlink" href="#verbosity-control" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="verbosity-criticity-of-a-message">
+<h5>Verbosity (criticity) of a message<a class="headerlink" href="#verbosity-criticity-of-a-message" title="Permalink to this headline">¶</a></h5>
+</div>
+<div class="section" id="verbosity-threshold-of-a-logger">
+<h5>Verbosity threshold of a logger<a class="headerlink" href="#verbosity-threshold-of-a-logger" title="Permalink to this headline">¶</a></h5>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">API Manual</a><ul>
+<li><a class="reference internal" href="#getting-started">Getting started</a><ul>
+<li><a class="reference internal" href="#boilerplate">Boilerplate</a></li>
+<li><a class="reference internal" href="#drop-in-replacement-for-print">Drop in replacement for <tt class="docutils literal"><span class="pre">print</span></tt></a><ul>
+<li><a class="reference internal" href="#spit-custom-dots-on-demand">Spit (custom) dots on demand</a></li>
+<li><a class="reference internal" href="#set-an-alternate-char-or-string-for-use-as-dot">Set an alternate char or string for use as dot</a></li>
+<li><a class="reference internal" href="#mixing-dots-and-messages">Mixing dots and messages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#more-in-depth">More in depth</a><ul>
+<li><a class="reference internal" href="#automatic-progress-notification-with-dots-and-messages">Automatic progress notification (with dots and messages)</a></li>
+<li><a class="reference internal" href="#logger-creation-fetching-and-configuration">Logger creation, fetching and configuration</a><ul>
+<li><a class="reference internal" href="#logger-uniqueness">Logger uniqueness</a></li>
+<li><a class="reference internal" href="#caveat-no-reparametrization-upon-further-calls-to-get-logger">Caveat: no reparametrization upon further calls to <tt class="docutils literal"><span class="pre">get_logger</span></tt></a></li>
+<li><a class="reference internal" href="#specify-log-files-including-stdout">Specify log files (including stdout)</a><ul>
+<li><a class="reference internal" href="#logfile-keyword-of-get-logger"><tt class="docutils literal"><span class="pre">logfile</span></tt> keyword of <tt class="docutils literal"><span class="pre">get_logger</span></tt></a></li>
+<li><a class="reference internal" href="#add-logfile-method-of-progressandlog"><tt class="docutils literal"><span class="pre">add_logfile</span></tt> method of <tt class="docutils literal"><span class="pre">ProgressAndLog</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#partial-log-messages-or-dots-only">Partial log: messages or dots only</a></li>
+<li><a class="reference internal" href="#add-a-timestamp-to-messages">Add a timestamp to messages</a></li>
+<li><a class="reference internal" href="#lazy-formatting-of-messages">Lazy formatting of messages</a></li>
+<li><a class="reference internal" href="#verbosity-control">Verbosity control</a><ul>
+<li><a class="reference internal" href="#verbosity-criticity-of-a-message">Verbosity (criticity) of a message</a></li>
+<li><a class="reference internal" href="#verbosity-threshold-of-a-logger">Verbosity threshold of a logger</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="import_or_embed.html"
+                        title="previous chapter">Install or embed, then import</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="roadmap.html"
+                        title="next chapter">Roadmap</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/manual.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="roadmap.html" title="Roadmap"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="import_or_embed.html" title="Install or embed, then import"
+             >previous</a> |</li>
+        <li><a href="index.html">monologue 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Feth AREZKI.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
