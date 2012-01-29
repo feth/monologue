@@ -26,10 +26,7 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
-    <link rel="top" title="monologue 0.1 documentation" href="index.html" />
-    <link rel="up" title="About this" href="about.html" />
-    <link rel="next" title="Requirements and compatibility" href="requirements.html" />
-    <link rel="prev" title="About this" href="about.html" /> 
+    <link rel="top" title="monologue 0.1 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,14 +35,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="requirements.html" title="Requirements and compatibility"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="about.html" title="About this"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">monologue 0.1 documentation</a> &raquo;</li>
-          <li><a href="about.html" accesskey="U">About this</a> &raquo;</li> 
+        <li><a href="index.html">monologue 0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -58,54 +48,82 @@
 <h1>Quick features presentation<a class="headerlink" href="#quick-features-presentation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="feature-logging-a-simpler-api">
 <h2>Feature: logging, a simpler API<a class="headerlink" href="#feature-logging-a-simpler-api" title="Permalink to this headline">¶</a></h2>
-<p>Some things are deliberately different from logging (however, the logging API is available). This module will
-be logging to stdout by default.</p>
-<p>Loggers defined here here have a verbosity setting: this integer has the opposite
-meaning of the &#8220;log level&#8221; from logging.</p>
+<p>The loggers provided by <em>monologue</em> are preconfigured so as to
+fit your needs with the least boilerplate possible: you can start
+using them as cute drop-in replacements for the <tt class="docutils literal"><span class="pre">print</span></tt> statements,
+and later fine tune the logging behaviour to specific needs (log to
+-several- files, laconic to verbose logs...).</p>
 </div>
 <div class="section" id="feature-progress-information">
 <h2>Feature: Progress information<a class="headerlink" href="#feature-progress-information" title="Permalink to this headline">¶</a></h2>
-<p>All indicators below shown can be combined at will.</p>
-<div class="section" id="running-distance-unknown">
-<h3>Running distance unknown<a class="headerlink" href="#running-distance-unknown" title="Permalink to this headline">¶</a></h3>
-<p>If your program is looping in the dark, searching for a solution with the loop
-number unknown, then maybe the best output you can do to say &#8220;hey, I&#8217;m alive,
-I&#8217;m digging that mine out&#8221; is a plain old dot every given number of steps:</p>
-<div class="highlight-python"><pre>.</pre>
+<p>There are several progress indicators for loop based computations,
+and they can be combined at will.</p>
+<p>Mainly, there are two usecases: whether the number of steps is known in
+advance or not.</p>
+<ul>
+<li><dl class="first docutils">
+<dt>progress indicators on a single line every given number of steps</dt>
+<dd><p class="first">(<tt class="docutils literal"><span class="pre">dot</span></tt> method):</p>
+<p>With an indefinite number of loops to go through, this is maybe the
+best output your program can do to say &#8220;hey, I&#8217;m alive, I&#8217;m digging
+that mine out&#8221;.</p>
+<p>In the simplest form, it looks like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="o">.......</span>
+</pre></div>
 </div>
-<p>Then, one minute later, another dot:</p>
-<div class="highlight-python"><pre>..</pre>
+<p>We can also output arbitrary strings, such as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="o">...</span><span class="n">XX</span><span class="o">......</span><span class="n">XXXXX</span><span class="o">........</span>
+</pre></div>
 </div>
-<p>Many dots, and so on, you get it.</p>
-<p>There is also a counter, that you can combine with dots:</p>
-<div class="highlight-python"><pre>..........
+<p>Or display arbitrary intermediate indicators:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">5</span><span class="p">][</span><span class="mi">9</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>If you do a parallel computation, you may want to assign a different
+character to each processing unit:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="n">caacbbababbbabaaaacaaaccbabaaccabbbbcccbbc</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>automatic counter, also every given number of steps (configure with</dt>
+<dd><p class="first"><tt class="docutils literal"><span class="pre">progress_every</span></tt> method):</p>
+<p>Like dots, a counter is relevant when the number of steps is not
+known in advance:</p>
+<div class="highlight-python"><pre>[Exciting computation] Iteration 1000 done
+[Exciting computation] Iteration 2000 done</pre>
+</div>
+<p>Transparently combined with the dot feature:</p>
+<div class="last highlight-python"><pre>..........
 [Exciting computation] Iteration 1000 done
 ..........
 [Exciting computation] Iteration 2000 done
 ...</pre>
 </div>
-<p>Every logger can use a different dot character if you wish:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="o">.....</span><span class="n">x</span><span class="o">..</span><span class="n">x</span><span class="o">....</span><span class="n">xxx</span><span class="o">..</span>
-</pre></div>
+</dd>
+</dl>
+</li>
+<li><p class="first">End of computation (<tt class="docutils literal"><span class="pre">progress_complete</span></tt> method):</p>
+<blockquote>
+<div><p>Your program might conveniently display an <em>end of computation</em>
+message:</p>
+<div class="highlight-python"><pre>[Exciting computation] Successfully completed 2435 iterations</pre>
 </div>
-</div>
-<div class="section" id="running-distance-known">
-<h3>Running distance known<a class="headerlink" href="#running-distance-known" title="Permalink to this headline">¶</a></h3>
-<p>It&#8217;s fair, if you know your program is going to run through 42195 iterations a
-particular loop, to let the viewer know how far it&#8217;s gone, proportionnaly:</p>
+</div></blockquote>
+</li>
+<li><p class="first">Progress percentage (configure with <tt class="docutils literal"><span class="pre">percent_every</span></tt> method)</p>
+<blockquote>
+<div><p>It&#8217;s fair, if you know your program is going to run a particular
+loop 42195 times to let the viewer know how far it&#8217;s gone,
+proportionnaly:</p>
 <div class="highlight-python"><pre>[Exciting computation] 10 %
-[Exciting computation] 20 %
-...</pre>
+[Exciting computation] 20 %</pre>
 </div>
-<p>You can also mix this with dots.</p>
-<p>This uses the plain logging system.</p>
-</div>
-</div>
-<div class="section" id="logging-and-progress-combined">
-<h2>Logging and progress combined<a class="headerlink" href="#logging-and-progress-combined" title="Permalink to this headline">¶</a></h2>
-<p>The combination of logging full lines and progress dots that are not
-individually followed with a newline character involves a trick to end the line
-before an informative message.</p>
+</div></blockquote>
+</li>
+</ul>
 </div>
 </div>
 
@@ -119,22 +137,11 @@ before an informative message.</p>
   <ul>
 <li><a class="reference internal" href="#">Quick features presentation</a><ul>
 <li><a class="reference internal" href="#feature-logging-a-simpler-api">Feature: logging, a simpler API</a></li>
-<li><a class="reference internal" href="#feature-progress-information">Feature: Progress information</a><ul>
-<li><a class="reference internal" href="#running-distance-unknown">Running distance unknown</a></li>
-<li><a class="reference internal" href="#running-distance-known">Running distance known</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#logging-and-progress-combined">Logging and progress combined</a></li>
+<li><a class="reference internal" href="#feature-progress-information">Feature: Progress information</a></li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="about.html"
-                        title="previous chapter">About this</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="requirements.html"
-                        title="next chapter">Requirements and compatibility</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/features.txt"
@@ -163,14 +170,7 @@ before an informative message.</p>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="requirements.html" title="Requirements and compatibility"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="about.html" title="About this"
-             >previous</a> |</li>
-        <li><a href="index.html">monologue 0.1 documentation</a> &raquo;</li>
-          <li><a href="about.html" >About this</a> &raquo;</li> 
+        <li><a href="index.html">monologue 0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
