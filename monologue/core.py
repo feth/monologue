@@ -472,6 +472,8 @@ class ProgressAndLog(Logger):
         self._offset = level - REFERENCE_LEVEL
         Logger.setLevel(self, level)
 
+    setLevel.__doc__ = Logger.setLevel.__doc__
+
     def progress_every(self, value):
         """
         parameters
@@ -548,10 +550,17 @@ class ProgressAndLog(Logger):
         self._dot_string = dot_string
 
     def progress_reset(self):
+        """
+        Call this to reset the number of iterations performed.
+        Subsequent iterations will be numbered 1, 2 etc
+        """
         self._iterations = 0
         self._next_percent_print = self.percent_print_every
 
     def offset(self):
+        """
+        Getter for the current verbosity offset
+        """
         return self._offset
 
     def _maybe_dot(self):
