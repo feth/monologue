@@ -175,6 +175,10 @@ class ProgressAndLog(Logger):
         verbosity_offset: integer
             see add_to_offset and the like
         logfile: see ProgressAndLog.add_logfile
+        timestamp:  boolean, defaults to False
+            defines:
+            - whether the first logfile (or stdout) will contain timestamps
+            - default value for future calls to add_logfile
 
         """
         Logger.__init__(self, name)
@@ -190,14 +194,8 @@ class ProgressAndLog(Logger):
         self._percent_target = _NEVER_PERCENT_VALUE
         self._logfiles = []
         self._dot_logfiles = []
-
-        if timestamp:
-            fmt = "[%(asctime)s][%(name)s] %(message)s"
-        else:
-            fmt = "[%(name)s] %(message)s"
-        self._formatter = Formatter(fmt=fmt)
-
-        self.add_logfile(logfile)
+        self._timestamp = timestamp
+        self.add_logfile(logfile, timestamp=timestamp)
 
         self.set_offset(verbosity_offset)
 
@@ -206,7 +204,7 @@ class ProgressAndLog(Logger):
     debug, info, warning, critical, log = (_textlogger_factory(Logger, name)
         for name in 'debug info warning critical log'.split())
 
-    def add_logfile(self, logfile, dots=True):
+    def add_logfile(self, logfile, dots=True, timestamp=None):
         """
         Parameters
         ----------
@@ -215,14 +213,31 @@ class ProgressAndLog(Logger):
             we'll log messages and progress there.
             if a string is supplied, it is assumed to be the path where to log
             The file will be created or appended to.
+
+        dots: boolean
+            do you want dots printed in this logfile?
+
+        timestamp: boolean, defaults to None
+            do you want logs to be prefixed by a timestamp?
+            if unset (None), the value set at object
+            initialization (in __init__) is reused
         """
         if logfile is None:
             logfile = sys.stdout
         elif isinstance(logfile, basestring):
             logfile = open(logfile, 'ab')
 
+
+        if timestamp is None:
+            timestamp = self._timestamp
+        if timestamp:
+            log_format = "[%(asctime)s][%(name)s] %(message)s"
+        else:
+            log_format = "[%(name)s] %(message)s"
+        formatter = Formatter(fmt=log_format)
+
         handler = StreamHandler(logfile)
-        handler.setFormatter(self._formatter)
+        handler.setFormatter(formatter)
         self.addHandler(handler)
 
         self._logfiles.append(logfile)
