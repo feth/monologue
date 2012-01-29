@@ -49,7 +49,7 @@ xxxxx
 ===================================
 Doc
 ===================================
-For now, a doctest in monologue/tests/
+Sphinx doc is almost complete, as well as docstrings here.
 
 """
 
