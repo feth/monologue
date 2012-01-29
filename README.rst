@@ -2,6 +2,9 @@
 MONOLOGUE
 ==========
 
+.. custom role to bypass the sphinx ref directive
+.. role:: ref
+
 Main documentation: http://feth.github.com/monologue/
 
 .. include:: whatsthis.rst
