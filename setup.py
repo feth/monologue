@@ -6,7 +6,7 @@ long_description = '\n\n'.join([open('README.rst').read()])
 
 setup(name='monologue',
       version=version,
-      description="Monologue - A cool logging module !",
+      description="Monologue - processing messages and progress display",
       long_description=long_description,
       classifiers=[],
       keywords='logging',

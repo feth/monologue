@@ -7,11 +7,11 @@ MONOLOGUE
 
 Main documentation: http://feth.github.com/monologue/
 
-.. include:: whatsthis.rst
+.. include:: doc/whatsthis.rst
 
-.. include:: requirements.rst
+.. include:: doc/requirements.rst
 
-.. include:: about.rst
+.. include:: doc/about.rst
 
 Don't use yet, unless you know what you're doing, because this is what's left to do:
 

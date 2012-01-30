@@ -8,7 +8,7 @@ License information
 
 .. compound::
 
-    .. include:: COPYING
+    .. include:: ../COPYING
 
 *******
 Concept
