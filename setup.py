@@ -2,7 +2,7 @@ from setuptools import setup
 
 
 version = '0.0.0beta'
-long_description = '\n\n'.join([open('README.rst').read()])
+long_description = '\n\n'.join([open('doc/about.rst').read()])
 
 setup(name='monologue',
       version=version,
@@ -19,5 +19,6 @@ setup(name='monologue',
       install_requires=[
           'setuptools',
           # -*- Extra requirements: -*-
-      ]
+      ],
+      package_data={'doc': ['doc/*.rst']},
       )

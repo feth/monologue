@@ -51,6 +51,8 @@ Doc
 ===================================
 Sphinx doc is almost complete, as well as docstrings here.
 
+http://feth.github.com/monologue/
+
 """
 
 
