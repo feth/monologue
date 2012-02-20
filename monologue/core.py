@@ -92,6 +92,10 @@ def _textlogger_factory(klass, attr_name):
 
     @wraps(func)
     def new_func(self, *args, **kwargs):
+        """
+        This function will replace 'func', and the doctring will be set
+        correctly by `wraps`.
+        """
         self._set_out_type(TEXT)
         return func(self, *args, **kwargs)
 
@@ -446,13 +450,32 @@ class ProgressAndLog(Logger):
             for logfile in self._dot_logfiles:
                 logfile.write(dot_string)
 
+    def offset(self):
+        """
+        Returns
+        -------
+        integer: Current verbosity offset
+
+        See also
+        --------
+        :func:`monologue.core.set_offset`
+        :func:`monologue.core.add_to_offset`
+        """
+        return self._offset
+
     def set_offset(self, offset):
         """
         Sets verbosity offset above/below standard verbosity level.
 
-        Parameters:
+        Parameters
+        ----------
         offset: integer
             makes sense between -5 and +35
+
+        See also
+        --------
+        :func:`monologue.core.offset`
+        :func:`monologue.core.add_to_offset`
 
         >>> logger = get_logger("test.offset")
         >>> logger.set_offset(+10)
@@ -466,15 +489,28 @@ class ProgressAndLog(Logger):
 
     def add_to_offset(self, value):
         """
+        add an integer value to current verbosity offset
 
+        Parameters
+        ----------
+        offset: integer
+
+        See also
+        --------
+        :func:`monologue.core.offset`
+        :func:`monologue.core.set_offset`
         """
         self.set_offset(self._offset + value)
 
-    def setLevel(self, level):
+    @wraps(Logger.setLevel)
+    def _set_level(self, level):
+        """
+        Gently overrides Logger.setLevel.
+        This method is renamed at runtime (when building the class),
+        and the docstring is replaced.
+        """
         self._offset = level - REFERENCE_LEVEL
         Logger.setLevel(self, level)
-
-    setLevel.__doc__ = Logger.setLevel.__doc__
 
     def progress_every(self, value):
         """
@@ -558,12 +594,6 @@ class ProgressAndLog(Logger):
         """
         self._iterations = 0
         self._next_percent_print = self.percent_print_every
-
-    def offset(self):
-        """
-        Getter for the current verbosity offset
-        """
-        return self._offset
 
     def _maybe_dot(self):
         if self._dot_every > 0 \
@@ -717,6 +747,13 @@ class ProgressAndLog(Logger):
 def get_logger(name, verbosity_offset=0, logfile=None, timestamp=False):
     """
     Provides a logger with specified name.
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    An instance of ProgressAndLog
     """
     logger = _LOGGERS.get(name)
     if logger is None:
