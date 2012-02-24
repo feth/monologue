@@ -596,12 +596,20 @@ class ProgressAndLog(Logger):
         self._next_percent_print = self.percent_print_every
 
     def _maybe_dot(self):
+        """
+        Puts a progress related dot if conditions are met.
+        Method is related to `step()`
+        """
         if self._dot_every > 0 \
             and self.getEffectiveLevel() <= PROGRESS \
             and not self._iterations % self._dot_every:
             self.dot()
 
     def _maybe_iteration_msg(self):
+        """
+        Outputs a progress related message if conditions are met.
+        Method is related to `step()`
+        """
         if self._progress_every < 1:
             return
         if not self._iterations % self._progress_every:
@@ -609,6 +617,11 @@ class ProgressAndLog(Logger):
             self.msg(message, verbosity=PROGRESS)
 
     def _maybe_percentage_msg(self):
+        """
+        Outputs progress percentage if conditions are met.
+        Resets counters until next time.
+        Method is related to `step()`
+        """
         if self._percent_target <= 0:
             return
 
