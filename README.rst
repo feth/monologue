@@ -4,7 +4,7 @@ MONOLOGUE
 
 .. image:: https://secure.travis-ci.org/feth/monologue.png?branch=master
 
-See why: http://travis-ci.org/#!/feth/monologue (wannabe supported platforms should be: 2.6 NOK, 2.7 OK, 3.2 NOK)
+See why: http://travis-ci.org/#!/feth/monologue (supported platforms are: 2.6 NOK, 2.7 OK, 3.2 NOK)
 
 .. custom role to bypass the sphinx ref directive
 .. role:: ref
