@@ -6,4 +6,6 @@ python:
 install:
     - pip install nose coverage --use-mirrors
     - pip install . --use-mirrors
-script: nosetests --with-coverage --with-doctest
+    # cd outside srcdir, it confuses Python 3.2
+    - cd doc
+script: nosetests --with-coverage --with-doctest --cover-package=monologue monologue
