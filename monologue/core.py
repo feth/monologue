@@ -43,7 +43,7 @@ TL; DR (too long, did'nt read)
 >>> logger.msg("blah")
 [identifier] blah
 >>> logger.set_dot_string("x")  # doctest prefers x to .
->>> for time in xrange(5): logger.dot()
+>>> for time in range(5): logger.dot()
 xxxxx
 
 ===================================
@@ -398,7 +398,7 @@ class ProgressAndLog(Logger):
         >>> laconic_logger = get_logger("lac", verbosity_offset=+10)
 
         dot overriding
-        >>> for time in xrange(2):
+        >>> for time in range(2):
         ...     verbose_logger.dot(dot_string="[more than a dot]")
         [more than a dot][more than a dot]
 
