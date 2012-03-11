@@ -4,6 +4,8 @@ MONOLOGUE
 
 .. image:: https://secure.travis-ci.org/feth/monologue.png?branch=master
 
+See why: http://travis-ci.org/#!/feth/monologue
+
 .. custom role to bypass the sphinx ref directive
 .. role:: ref
 
