@@ -2,20 +2,49 @@
 MONOLOGUE
 ==========
 
+Autotest status
+----------------
 .. image:: https://secure.travis-ci.org/feth/monologue.png?branch=master
 
-See why: http://travis-ci.org/#!/feth/monologue (supported platforms are: 2.6 NOK, 2.7 OK, 3.2 NOK)
+See why: http://travis-ci.org/#!/feth/monologue
+
+Supported Python
+----------------
+
+* Python 2.6,
+* Python 2.7,
+* Python 3.2
+
+Dependencies
+------------
+
+::
+
+        None
+
+What is this
+------------
+
+A single file module that handles logging and progress information.
 
 .. custom role to bypass the sphinx ref directive
 .. role:: ref
 
-Main documentation: http://feth.github.com/monologue/
+Main documentation
+------------------
+
+http://feth.github.com/monologue/
+
+(Not sure it's the latests build: it's a pain, building for github).
 
 .. include:: doc/whatsthis.rst
 
 .. include:: doc/requirements.rst
 
 .. include:: doc/about.rst
+
+Status
+------
 
 Don't use yet, unless you know what you're doing, because this is what's left to do:
 
