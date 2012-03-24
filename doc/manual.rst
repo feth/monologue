@@ -130,7 +130,7 @@ For instance, let's rewrite ``fly_to_1``.
     while x != 1:
 
         # count one step
-        logger.step()
+        logger.progress_step()
 
         if x % 2 == 0:  # if x is odd
             x /= 2  # halve x
