@@ -10,12 +10,12 @@ Getting started
 Boilerplate
 ============
 
-After importing, you have to define one or several loggers with explicite names.
+After importing, you have to define one or several loggers with explicit names.
 
 .. code-block:: python
 
     from monologue import get_logger
-    logger = get_logger("explicite name")
+    logger = get_logger("explicit name")
 
 ==================================
 Drop in replacement for ``print``
@@ -32,10 +32,6 @@ use
 .. code-block:: python
 
     logger.msg("Message I intend to convey")
-
-
-.. TODO
-.. The following ``sed`` one liner will replace print statements with a call to ``logger.msg`` in a Python source file. It will however not handle multiline ``print`` statements properly::
 
 Spit (custom) dots on demand
 ----------------------------------
@@ -97,6 +93,7 @@ This code
 
 .. code-block:: python
 
+    logger.set_dot_str("x")
     for x in xrange(10):
         logger.dot()
         if x == 5:
@@ -105,7 +102,7 @@ This code
 produces the following output::
 
     xxxxxx
-    [explicite name] x is 5!
+    [explicit name] x is 5!
     xxxx
 
 ***************
