@@ -33,10 +33,6 @@ use
 
     logger.msg("Message I intend to convey")
 
-
-.. TODO
-.. The following ``sed`` one liner will replace print statements with a call to ``logger.msg`` in a Python source file. It will however not handle multiline ``print`` statements properly::
-
 Spit (custom) dots on demand
 ----------------------------------
 
