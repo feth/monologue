@@ -10,12 +10,12 @@ Getting started
 Boilerplate
 ============
 
-After importing, you have to define one or several loggers with explicite names.
+After importing, you have to define one or several loggers with explicit names.
 
 .. code-block:: python
 
     from monologue import get_logger
-    logger = get_logger("explicite name")
+    logger = get_logger("explicit name")
 
 ==================================
 Drop in replacement for ``print``
@@ -105,7 +105,7 @@ This code
 produces the following output::
 
     xxxxxx
-    [explicite name] x is 5!
+    [explicit name] x is 5!
     xxxx
 
 ***************

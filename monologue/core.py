@@ -36,7 +36,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 DAMAGE.
 
 =================================
-TL; DR (too long, did'nt read)
+TL; DR (too long, didn't read)
 =================================
 
 >>> logger = get_logger("identifier")
