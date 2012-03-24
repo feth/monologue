@@ -97,6 +97,7 @@ This code
 
 .. code-block:: python
 
+    logger.set_dot_str("x")
     for x in xrange(10):
         logger.dot()
         if x == 5:
