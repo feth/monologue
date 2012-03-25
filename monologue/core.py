@@ -79,7 +79,7 @@ _OUT_TYPES = WeakKeyDictionary()
 _NEVER_PERCENT_VALUE = 0
 
 
-def _textlogger_factory(klass, attr_name):
+def _textlogger_factory(progress_and_log, func):
     """
     Adds a call to _set_out_type to the vanilla function
     taken in klass.
@@ -88,21 +88,22 @@ def _textlogger_factory(klass, attr_name):
     Logger.debug() and family in ProgressAndLog,
     in order to insert newlines between dots and log messages.
     """
-    func = getattr(klass, attr_name)
-
     @wraps(func)
-    def new_func(self, *args, **kwargs):
+    def new_func(*args, **kwargs):
         """
         This function will replace 'func', and the doctring will be set
         correctly by `wraps`.
+
+        Adds a call to _set_out_type to the vanilla function
+        taken in klass.
         """
-        self._set_out_type(TEXT)
-        return func(self, *args, **kwargs)
+        progress_and_log._set_out_type(TEXT)
+        return func(*args, **kwargs)
 
     return new_func
 
 
-class ProgressAndLog(Logger):
+class ProgressAndLog(object):
     """
     Subclass of Logger, this class combines 2 functionnalities:
     -print messages
@@ -187,7 +188,7 @@ class ProgressAndLog(Logger):
             - default value for future calls to add_logfile
 
         """
-        Logger.__init__(self, name)
+        self.logger = Logger(name)
 
         # overwritten by set_offset
         # this is an emulation of the Logger level for dots
@@ -207,8 +208,9 @@ class ProgressAndLog(Logger):
 
         self._dot_string = DEFAULT_DOT_CHAR
 
-    debug, info, warning, critical, log = (_textlogger_factory(Logger, name)
-        for name in 'debug info warning critical log'.split())
+        for name in 'debug info warning critical log'.split():
+            setattr(self, name,
+                    _textlogger_factory(self, getattr(self.logger, name)))
 
     def add_logfile(self, logfile, dots=True, timestamp=None):
         """
@@ -244,7 +246,7 @@ class ProgressAndLog(Logger):
 
         handler = StreamHandler(logfile)
         handler.setFormatter(formatter)
-        self.addHandler(handler)
+        self.logger.addHandler(handler)
 
         self._logfiles.append(logfile)
         if dots:
@@ -370,9 +372,9 @@ class ProgressAndLog(Logger):
         self._set_out_type(TEXT)
         if isinstance(msgvars, tuple):
             # Logger.log wants tuples to be given as *args
-            Logger.log(self, verbosity, message, *msgvars)
+            self.logger.log(verbosity, message, *msgvars)
         else:
-            Logger.log(self, verbosity, message, msgvars)
+            self.logger.log(verbosity, message, msgvars)
 
     def dot(self, verbosity=None, dot_string=None):
         """
@@ -485,7 +487,7 @@ class ProgressAndLog(Logger):
         25
         """
         self._offset = offset
-        self.setLevel(offset + REFERENCE_LEVEL)
+        self.logger.setLevel(offset + REFERENCE_LEVEL)
 
     def add_to_offset(self, value):
         """
@@ -502,15 +504,14 @@ class ProgressAndLog(Logger):
         """
         self.set_offset(self._offset + value)
 
-    @wraps(Logger.setLevel)
-    def _set_level(self, level):
+    def setLevel(self, level):
         """
         Gently overrides Logger.setLevel.
         This method is renamed at runtime (when building the class),
         and the docstring is replaced.
         """
         self._offset = level - REFERENCE_LEVEL
-        Logger.setLevel(self, level)
+        self.logger.setLevel(level)
 
     def progress_every(self, value):
         """
@@ -601,9 +602,15 @@ class ProgressAndLog(Logger):
         Method is related to `step()`
         """
         if self._dot_every > 0 \
-            and self.getEffectiveLevel() <= PROGRESS \
+            and self.logger.getEffectiveLevel() <= PROGRESS \
             and not self._iterations % self._dot_every:
             self.dot()
+
+    def getEffectiveLevel(self):
+        """
+        FIXME: let's setattr this method instead of wrapping it
+        """
+        return self.logger.getEffectiveLevel()
 
     def _maybe_iteration_msg(self):
         """
